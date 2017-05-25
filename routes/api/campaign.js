@@ -5,9 +5,9 @@ router.get('/', function(req, res, next) {
   res.send('respond with a campaign');
 });
 
-router.get('/read/locations/:locationID', function(req, res, next){
+router.get('/locations/:locationID', function(req, res, next){
   // res.send('good!');
-  res.json({'images':[{'url':'http://abdc.com/a12398'},{'url':'http://abdc.com/a12312323'}]});
+  res.json({'images':[{'url':'http://wallpaper-gallery.net/images/image/image-13.jpg'},{'url':'https://www.w3schools.com/css/img_fjords.jpg'}]});
 });
 
 module.exports = router;
