@@ -13,7 +13,7 @@ CREATE TABLE `app_info` (
 CREATE TABLE `campaign_info` (
   `id` int(11) NOT NULL,
   `title` varchar(500) NOT NULL,
-  `url` text CHARACTER SET latin1 NOT NULL,
+  `url` text NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `look_date` int(11) NOT NULL,
