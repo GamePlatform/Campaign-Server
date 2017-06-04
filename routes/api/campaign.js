@@ -9,7 +9,7 @@ router.get('/locations/:locationID', function(req, res, next){
   // res.send('good!');
   res.json({'images':[{'url':'http://wallpaper-gallery.net/images/image/image-13.jpg'},{'url':'https://www.w3schools.com/css/img_fjords.jpg'}]});
 });
-
+// 밍
 router.delete('/info', function(req, res, next){
 
   // request 안에서 campaignID'들'을 가져오기
