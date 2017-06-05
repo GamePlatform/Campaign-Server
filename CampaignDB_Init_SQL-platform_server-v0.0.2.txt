@@ -14,7 +14,7 @@ CREATE TABLE `app_info` (
 
 CREATE TABLE `campaign_info` (
   `id` int(11) NOT NULL,
-  `title` varchar(500) NOT NULL,
+  `title` varchar(500) NOT NULL COMMENT 'ex) 6일 광고 다시 보지 않기', 
   `url` text NOT NULL,
   `ad_expire_day` int(11) NOT NULL,
   `start_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
