@@ -2,6 +2,8 @@
 
 CREATE database `campaigndb` DEFAULT CHARACTER SET utf8;
 
+use campaigndb;
+
 CREATE TABLE `app_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) NOT NULL,
