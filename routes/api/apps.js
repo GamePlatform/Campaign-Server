@@ -38,7 +38,6 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res){
   var app_info = {
-    'id': req.body.app_info[0].id,
     'title': req.body.app_info[0].title
   };
 
@@ -47,8 +46,26 @@ router.post('/', function(req, res){
       console.error(err);
       throw err;
     }
-    // console.log(query);
     res.status(200).send('Your app registration was successful.');
+  });
+});
+
+router.get('/:aid', function(req, res, next) {
+  var appQuery;
+  var aid = req.params.aid;
+
+  appQuery = connection.query('select title from app_info where id=?', aid, function(err, appRows){
+    if (err) {
+      console.error(err);
+      throw err;
+    }
+
+    //need error
+    // if(!apps){
+    //   throw err;
+    // }
+
+    res.json(appRows[0]);
   });
 });
 
