@@ -5,54 +5,54 @@ CREATE database `campaigndb` DEFAULT CHARACTER SET utf8;
 use campaigndb;
 
 CREATE TABLE `app_info` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `campaign_info` (
-  `id` int(11) NOT NULL,
-  `title` varchar(500) NOT NULL COMMENT 'ex) 6일 광고 다시 보지 않기', 
-  `url` text NOT NULL,
-  `ad_expire_day` int(11) NOT NULL,
-  `start_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `end_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) NOT NULL COMMENT 'ex) 6일 광고 다시 보지 않기',
+  `url` varchar(500) NOT NULL,
+  `ad_expire_day` int(3) NOT NULL,
+  `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `location_for_app` (
+CREATE TABLE `device_for_app` (
+  `device_id` int(11) NOT NULL AUTO_INCREMENT,
   `app_id` int(11) NOT NULL,
-  `location_id` int(11) NOT NULL,
-  `title` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`app_id`,`location_id`),
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`device_id`),
+  KEY `appID_to_device` (`app_id`),
+  CONSTRAINT `appID_to_device` FOREIGN KEY (`app_id`) REFERENCES `app_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `location_for_app` (
+  `location_id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_id` int(11) NOT NULL,
+  `title` varchar(500) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`location_id`),
+  KEY `appID_to_location` (`app_id`),
   CONSTRAINT `appID_to_location` FOREIGN KEY (`app_id`) REFERENCES `app_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `campaign_for_app` (
-  `app_id` int(11) NOT NULL,
+CREATE TABLE `campaign_for_location` (
   `location_id` int(11) NOT NULL,
-  `campaign_order` int(11) NOT NULL,
   `campaign_id` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`app_id`,`location_id`,`campaign_order`,`campaign_id`),
+  `campaign_order` int(2) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`location_id`,`campaign_id`),
   KEY `campaignID_to_campaign_for_app` (`campaign_id`),
-  CONSTRAINT `appID_locationID_to_campaign_for_app` FOREIGN KEY (`app_id`, `location_id`) REFERENCES `location_for_app` (`app_id`, `location_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `campaignID_to_campaign_for_app` FOREIGN KEY (`campaign_id`) REFERENCES `campaign_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `device_for_app` (
-  `app_id` int(11) NOT NULL,
-  `device_id` int(11) NOT NULL,
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`app_id`,`device_id`),
-  CONSTRAINT `appID_to_device` FOREIGN KEY (`app_id`) REFERENCES `app_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `campaignID_to_campaign_for_app` FOREIGN KEY (`campaign_id`) REFERENCES `campaign_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `locationID_to_campaign_for_app` FOREIGN KEY (`location_id`) REFERENCES `location_for_app` (`location_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
