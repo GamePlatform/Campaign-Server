@@ -55,19 +55,12 @@ router.post('/url', function(req, res, next){
   var sql = 'insert into campaign_info '
   +'(title,url,ad_expire_day,start_date,end_date)'
   +'values (?,?,?,?,?)';
-
-  console.log(title);
-  console.log(url);
-  console.log(expireDay);
-  console.log(startDate);
-  console.log(endDate);
-
   
   var query = connection.query(sql, [title,url,expireDay,startDate,endDate], function(err, result){
     if(err){
       console.error(err);
       //throw err; //처리가 필요함.
-      res.status(400).send('error');
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
       return;
     }
 
