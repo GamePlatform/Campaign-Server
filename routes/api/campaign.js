@@ -45,4 +45,37 @@ router.get('/locations/:locationID', function(req, res, next){
   });
 });
 
+router.post('/url', function(req, res, next){
+  let title = req.body.title;
+  let url = req.body.url;
+  let expireDay = req.body.expireDay;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
+
+  var sql = 'insert into campaign_info '
+  +'(title,url,ad_expire_day,start_date,end_date)'
+  +'values (?,?,?,?,?)';
+
+  console.log(title);
+  console.log(url);
+  console.log(expireDay);
+  console.log(startDate);
+  console.log(endDate);
+
+  
+  var query = connection.query(sql, [title,url,expireDay,startDate,endDate], function(err, result){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error');
+      return;
+    }
+
+    console.log(query.sql);
+    console.log("Number of records inserted: " + result.affectedRows);
+    res.status(200).send('success');
+    return;
+  });
+});
+
 module.exports = router;
