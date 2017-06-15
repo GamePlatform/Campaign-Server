@@ -67,7 +67,6 @@ router.post('/url', function(req, res, next){
     console.log(query.sql);
     console.log("Number of records inserted: " + result.affectedRows);
     res.status(200).send('success');
-    return;
   });
 });
 
