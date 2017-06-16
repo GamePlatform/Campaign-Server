@@ -26,6 +26,10 @@ router.get('/locations/:locationID', function(req, res, next){
   var queryCount;
 
   campaignQuery = connection.query('select campaign_order, campaign_id, url, ad_expire_day from campaign_for_app inner join campaign_info on campaign_for_app.campaign_id=campaign_info.id where app_id=? and location_id=? and campaign_id not in (?)', [aId, lId, ecArr], function(err, camRows){
+    if (err) {
+      console.error(err);
+      throw err;
+    }
     campaigns = camRows;
 
     if(Array.isArray(campaigns)){
