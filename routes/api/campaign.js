@@ -88,7 +88,7 @@ function getDeviceForApp(column, condition, req, res) {
   connection.query("SELECT " + column + " FROM device_for_app where " + condition + "='" + req.query[condition] + "'", function (err, rows) {
     console.log('rows', rows);
     if (err) {
-      res.json({
+      res.status(400).json({
         'result': -1,
         'msg': err
       });
