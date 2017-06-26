@@ -10,25 +10,25 @@ var connection = mysql.createConnection({
   database:'campaigndb'
 });
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a campaign');
-});
+router.get('/:appid/locations/:locationID/campaigns', function(req, res, next){
 
-router.get('/locations/:locationID', function(req, res, next){
-
+// var dId = req.query.did;
+  var aId = req.params.appid;
   var lId = req.params.locationID;
-  var aId = req.query.aid;
-  var dId = req.query.did;
   var ecArr = req.query.ec;
 
   var campaignQuery;
   var campaigns;
   var queryCount;
 
-  campaignQuery = connection.query('select campaign_order, campaign_id, url, ad_expire_day from campaign_for_app inner join campaign_info on campaign_for_app.campaign_id=campaign_info.id where app_id=? and location_id=? and campaign_id not in (?)', [aId, lId, ecArr], function(err, camRows){
+  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.url, ci.ad_expire_day ' +
+          'from campaign_for_location as cl inner join location_for_app as la on cl.location_id=la.location_id ' +
+          'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
+          'where la.app_id=? and la.location_id=? and ci.id not in (?)';
+  campaignQuery = connection.query(campaignsJoinQuery, [aId, lId, ecArr], function(err, camRows){
     if (err) {
       console.error(err);
-      throw err;
+      res.status(400).send('GET Campaigns, DB select error.');
     }
     campaigns = camRows;
 
