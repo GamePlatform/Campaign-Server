@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fileUpload = require('express-fileupload');
+var fs = require('fs');
 
 var index = require('./routes/index');
 var usersApi = require('./routes/api/users');
@@ -23,10 +25,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
 app.use('/', index);
 app.use('/api/users', usersApi);
-app.use('/api/apps', campaign);
+app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
 
 // catch 404 and forward to error handler
@@ -45,6 +48,15 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+fs.mkdir("upload_images",function(e){
+    if(!e || (e && e.code === 'EEXIST')){
+        //do something with contents
+    } else {
+        //debug
+        console.log(e);
+    }
 });
 
 module.exports = app;
