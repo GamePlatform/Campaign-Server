@@ -31,9 +31,10 @@ router.get('/', function(req, res, next) {
       queryCount = 0;
     }
 
-    res.json({'count':queryCount,
-                apps
-            });
+    res.json({
+      'count':queryCount,
+        apps
+    });
   });
 });
 
@@ -106,42 +107,82 @@ router.get('/:aid', function(req, res, next) {
   });
 });
 
-router.get('/:appid/locations/:locationID/campaigns', function(req, res, next){
-
+router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
 // var dId = req.query.did;
   var aId = req.params.appid;
-  var lId = req.params.locationID;
-  var ecArr = req.query.ec;
+  var lId = req.params.locationid;
+  var ecArr = [];
+  var campaigns = [];
+  var ecLength = 0;
+
+  if(req.query.ec !== undefined){
+    ecLength = req.query.ec.length;
+  }
+
+  for(var i = 0; i < ecLength; i++){
+    ecArr.push(parseInt(req.query.ec[i]));
+  }
 
   var campaignQuery;
-  var campaigns;
   var queryCount;
 
   var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.url, ci.ad_expire_day ' +
           'from campaign_for_location as cl inner join location_for_app as la on cl.location_id=la.location_id ' +
           'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
-          'where la.app_id=? and la.location_id=? and ci.id not in (?)';
-  campaignQuery = connection.query(campaignsJoinQuery, [aId, lId, ecArr], function(err, camRows){
+          'where la.app_id=? and la.location_id=?';
+  campaignQuery = connection.query(campaignsJoinQuery, [aId, lId], function(err, camRows){
     if (err) {
       console.error(err);
       res.status(400).send('GET Campaigns, DB select error.');
     }
-    campaigns = camRows;
+    else{
+      if(ecLength > 0){
+        for(var i = 0; i < camRows.length; i++){
+          if(ecArr.indexOf(camRows[i].campaign_id) < 0){
+            campaigns.push(camRows[i]);
+          }
+        }
+      }else{
+        campaigns = camRows;
+      }
 
-    if(Array.isArray(campaigns)){
-      queryCount = campaigns.length;
-    }else if(campaigns){
-      queryCount = 1;
-    }else{
-      queryCount = 0;
+      if(Array.isArray(campaigns)){
+        queryCount = campaigns.length;
+      }else if(campaignsArr){
+        queryCount = 1;
+      }else{
+        queryCount = 0;
+      }
+
+      res.json({
+        'count':queryCount,
+          campaigns
+      });
     }
+  });
+});
 
-    console.log(campaigns);
-    console.log(queryCount);
+router.post('/:appid/locations/:locationid/campaigns', function(req, res){
+  var aId = parseInt(req.params.appid);
+  var lId = parseInt(req.params.locationid);
+  var campaigns = req.body.campaigns;
+  var enrollCampaigns = [];
+  var campaignsQuery;
+  var campaignsEnrollQuery;
 
-    res.json({'count':queryCount,
-                campaigns
-            });
+  for(var i=0;i<campaigns.length;i++){
+    enrollCampaigns.push([lId, campaigns[i].campaign_id, campaigns[i].campaign_order]);
+  }
+
+  campaignsEnrollQuery = 'insert into campaign_for_location (location_id, campaign_id, campaign_order) values ?';
+  campaignsQuery = connection.query(campaignsEnrollQuery, [enrollCampaigns], function(err, appRows){
+    if (err) {
+      console.error(err);
+      res.status(400).json({'error':'POST, api/apps/, DB insert, error'});
+    }
+    else{
+      res.status(200).json({'result':'Your campaigns have been successfully registered.'});
+    }
   });
 });
 
