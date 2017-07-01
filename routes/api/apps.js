@@ -211,4 +211,64 @@ router.delete('/:appid/locations/:locationid/campaigns', function(req, res){
   });
 });
 
+router.get('/:appid/locations', function (req, res) {
+  campaignsQuery = connection.query('select location_id from location_for_app where app_id=?',
+    [req.params.appid], function (err, rows) {
+      if (err) {
+        console.error(err);
+        res.status(400).json({ 'error': err });
+      } else {
+        res.status(200).json({ 'result': rows });
+      }
+    });
+});
+
+router.get('/:appid/locations/:locationid', function (req, res) {
+  campaignsQuery = connection.query('select * from location_for_app where app_id=? and location_id=?',
+    [req.params.appid, req.params.locationid], function (err, rows) {
+      if (err) {
+        console.error(err);
+        res.status(400).json({ 'error': err });
+      } else {
+        res.status(200).json({ 'result': rows });
+      }
+    });
+});
+
+// insert into campaigndb.location_for_app (location_id, app_id, title) values (11, 3, 'HG4');
+router.post('/:appid/locations', function (req, res) {
+  campaignsQuery = connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)',
+    [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
+      if (err) {
+        console.error(err);
+        res.status(400).json({ 'error': err });
+      } else {
+        res.status(200).json({ 'result': "Your location has been successfully registered." });
+      }
+    });
+});
+
+router.delete('/:appid/locations', function (req, res) {
+  var locationids = [];
+
+  for (var i = 0; i < req.body.locationids.length; i++) {
+    locationids.push([req.params.appid, req.body.locationids[i]]);
+  }
+
+  for (var i = 0; i < req.body.locationids; i++) {
+    console.log(i);
+    console.log(locationids[i]);
+  }
+
+  campaignsQuery = connection.query('delete from location_for_app where (app_id, location_id) IN (?)',
+    [locationids], function (err, rows) {
+      if (err) {
+        console.error(err);
+        res.status(400).json({ 'error': err });
+      } else {
+        res.status(200).json({ 'result': "Your location has been successfully deleted." });
+      }
+    });
+});
+
 module.exports = router;
