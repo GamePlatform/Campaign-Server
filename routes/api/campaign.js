@@ -3,135 +3,180 @@ var mysql = require('mysql');
 var router = express.Router();
 
 var connection = mysql.createConnection({
-  host: 'localhost',
-  password: 'root',
-  port: 3306,
-  user: 'root',
-  database: 'campaigndb'
+  host:'localhost',
+  port:3306,
+  user:'root',
+  password:'root',
+  database:'campaigndb'
 });
 
-router.get('/', function (req, res, next) {
-  res.send('respond with a campaign');
-});
+router.get('/', function(req, res, next){
 
-router.get('/locations/:locationID', function (req, res, next) {
-  var lId = req.params.locationID;
-  var aId = req.query.aid;
-  var dId = req.query.did;
-  var ecArr = req.query.ec;
+  var sql = 'select * from campaign_info';
 
-  var campaignQuery;
-  var campaigns;
-  var queryCount;
+  campaignQuery = connection.query(sql, null, function(err, rows){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
+      return;
+    }
 
-  campaignQuery = connection.query('select campaign_order, campaign_id, url, ad_expire_day from campaign_for_app inner join campaign_info on campaign_for_app.campaign_id=campaign_info.id where app_id=? and location_id=? and campaign_id not in (?)', [aId, lId, ecArr], function (err, camRows) {
-    campaigns = camRows;
-
-    if (Array.isArray(campaigns)) {
-      queryCount = campaigns.length;
-    } else if (campaigns) {
+    if(Array.isArray(rows)){
+      queryCount = rows.length;
+    }else if(rows){
       queryCount = 1;
-    } else {
+    }else{
       queryCount = 0;
     }
 
-    console.log(campaigns);
+    console.log(rows);
     console.log(queryCount);
 
-    res.json({
-      'count': queryCount,
-      campaigns
+    res.json({'count':queryCount,
+      'campaigns': rows
     });
   });
 });
 
-router.post('/deviceForApp', function (req, res) {
-  var queryErr = -1;
-  var deviceID = 'device_id';
-  var appID = 'app_id';
+router.get('/:campaignid', function(req, res, next){
+  let campaignId = req.params.campaignid;
 
-  if (!req.body[deviceID] || !req.body[appID]) {
-    res.json({
-      'result': -2,
-      'msg': 'check ' + deviceID + ' and ' + appID
-    });
-    return;
-  }
+  var sql = 'select * from campaign_info where id = ?';
 
-  connection.query('insert into device_for_app (app_id, device_id) values (?, ?)', [req.body[appID], req.body[deviceID]], function (err, rows) {
-    if (err) {
-      res.json({
-        'result': queryErr,
-        'msg': err
-      });
-    } else {
-      res.json({
-        'result': 0
-      });
+  campaignQuery = connection.query(sql, [campaignId], function(err, rows){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
+      return;
+    }
+
+    if(rows == 0){
+      res.status(400).json({'error':'GET ONE, api/campaign/:campaingid, DB select, no data'});
+    }else{
+      res.status(200).json(rows[0]);
     }
   });
 });
 
-function getDeviceForApp(column, condition, req, res) {
-  if (!req.query[condition]) {
-    res.json({
-      'result': -2,
-      'msg': 'check ' + condition
-    });
-    return;
-  }
+router.post('/url', function(req, res, next){
+  let title = req.body.title;
+  let url = req.body.url;
+  let expireDay = req.body.expireDay;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
 
-  // connection.query("SELECT app_id FROM device_for_app where device_id="+mysql.escape(req.query[deviceID]), function (err, rows) {  //됨
-  // connection.query("SELECT app_id FROM device_for_app where ?="+mysql.escape(req.query[deviceID]), [deviceID], function (err, rows) {  //왜 안되는거지..?
-  // connection.query("SELECT app_id FROM device_for_app where ?='?'", [deviceID, req.query[deviceID]], function (err, rows) {  //왜 안되는거지..?
-
-  connection.query("SELECT " + column + " FROM device_for_app where " + condition + "='" + req.query[condition] + "'", function (err, rows) {
-    console.log('rows', rows);
-    if (err) {
-      res.status(400).json({
-        'result': -1,
-        'msg': err
-      });
-    } else {
-      res.json({
-        'result': 0,
-        'rows': rows
-      });
+  var sql = 'insert into campaign_info '
+  +'(title,url,ad_expire_day,start_date,end_date)'
+  +'values (?,?,?,?,?)';
+  
+  var query = connection.query(sql, [title,url,expireDay,startDate,endDate], function(err, result){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
+      return;
     }
+
+    console.log(query.sql);
+    console.log("Number of records inserted: " + result.affectedRows);
+    res.status(200).send('success');
   });
-}
-
-router.get('/device', function (req, res) {
-  getDeviceForApp('device_id', 'app_id', req, res);
 });
 
-router.get('/app', function (req, res) {
-  getDeviceForApp('app_id', 'device_id', req, res);
-});
+router.post('/image', function(req, res, next){
 
-router.delete('/device', function (req, res) {
-  var queryErr = -1;
-  var deviceID = 'device_id';
-
-  if (!req.body[deviceID]) {
-    res.json({
-      'result': -2,
-      'msg': 'check ' + deviceID
-    });
-    return;
+  if (!req.files){
+    return res.status(400).send('No files were uploaded.');  
   }
 
-  connection.query("delete FROM device_for_app where " + deviceID + "='" + req.body[deviceID] + "'", function (err, rows) {
+  let title = req.body.title;
+  let uploadImage = req.files.uploadImage;
+  console.log(uploadImage.name);
+  let filePath = "upload_images/"+ Date.now() + '-'+ uploadImage.name;
+  let url = req.protocol + '://' + req.get('host')+"/"+filePath;
+  let expireDay = req.body.expireDay;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
+
+  var sql = 'insert into campaign_info '
+  +'(title,url,ad_expire_day,start_date,end_date)'
+  +'values (?,?,?,?,?)';
+  connection.beginTransaction(function(err) {
     if (err) {
-      res.json({
-        'result': -1,
-        'msg': err
-      });
-    } else {
-      res.json({
-        'result': 0
-      });
+      console.error(err);
+      connection.rollback(function() {
+          //throw err; //처리가 필요함.
+          res.status(400).send('error'); // 에러처리에 대한 예비코드
+          return;
+      }); 
     }
+
+    var query = connection.query(sql, [title,url,expireDay,startDate,endDate], function(err, result){
+      if(err){
+        console.error(err);
+        connection.rollback(function() {
+          //throw err; //처리가 필요함.
+          res.status(400).send('error'); // 에러처리에 대한 예비코드
+          return;
+        });
+      }
+
+      // Use the mv() method to place the file somewhere on your server 
+      uploadImage.mv(filePath, function(err) {
+        if (err){
+          console.error(err);
+          connection.rollback(function() {
+            //throw err; //처리가 필요함.
+            res.status(400).send('error'); // 에러처리에 대한 예비코드
+            return;
+          });
+        }
+        console.log('File Uploaded!');
+      });
+
+      console.log(query.sql);
+      console.log("Number of records inserted: " + result.affectedRows);
+      connection.commit(function(err){
+        if(err){
+          console.error(err);
+          connection.rollback(function() {
+            //throw err; //처리가 필요함.
+            res.status(400).send('error'); // 에러처리에 대한 예비코드
+            return;
+          });
+        }
+        console.log('Transaction Complete.');
+      });
+      res.status(200).send('success');
+    });
+  });
+});
+
+router.put('/:campaignid', function(req, res, next){
+  let campaignId = req.params.campaignid;
+  let title = req.body.title;
+  let url = req.body.url;
+  let expireDay = req.body.expireDay;
+  let startDate = req.body.startDate;
+  let endDate = req.body.endDate;
+
+  var sql = 'update campaign_info'
+  +' set title= ?,url=?,ad_expire_day=?,start_date=?,end_date=?'
+  +' where id = ?';
+  
+  var query = connection.query(sql, [title,url,expireDay,startDate,endDate,campaignId], function(err, result){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
+      return;
+    }
+
+    console.log(query.sql);
+    console.log("Number of records inserted: " + result.affectedRows);
+    res.status(200).send('success');
   });
 });
 
