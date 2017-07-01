@@ -39,6 +39,27 @@ router.get('/', function(req, res, next){
   });
 });
 
+router.get('/:campaignid', function(req, res, next){
+  let campaignId = req.params.campaignid;
+
+  var sql = 'select * from campaign_info where id = ?';
+
+  campaignQuery = connection.query(sql, [campaignId], function(err, rows){
+    if(err){
+      console.error(err);
+      //throw err; //처리가 필요함.
+      res.status(400).send('error'); // 에러처리에 대한 예비코드
+      return;
+    }
+
+    if(rows == 0){
+      res.status(400).json({'error':'GET ONE, api/campaign/:campaingid, DB select, no data'});
+    }else{
+      res.status(200).json(rows[0]);
+    }
+  });
+});
+
 router.post('/url', function(req, res, next){
   let title = req.body.title;
   let url = req.body.url;
