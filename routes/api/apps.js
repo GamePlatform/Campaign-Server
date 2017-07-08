@@ -2,39 +2,71 @@ var express = require('express');
 var mysql = require('mysql');
 var router = express.Router();
 
-var connection = mysql.createConnection({
-  host:'localhost',
-  port:3306,
-  user:'root',
-  password:'root',
-  database:'campaigndb'
-});
+var dbModule = require('../../config/db.js');
+
+// var connection = mysql.createConnection({
+//   host:'localhost',
+//   port:3306,
+//   user:'root',
+//   password:'root',
+//   database:'campaigndb'
+// });
 
 router.get('/', function(req, res, next) {
   var appQuery;
   var apps;
   var queryCount;
 
-  appQuery = connection.query('select id, title from app_info', function(err, appRows){
-    if (err) {
-      console.error(err);
+  dbModule.withConnection(dbModule.pool, function(connection, next){
+    connection.query('select id, title from app_info', function(err, appRows, fields){
+      if (err) {
+        return next(err);
+      }
+      console.log(fields);
+      apps = appRows;
+
+      if(Array.isArray(apps)){
+        queryCount = apps.length;
+      }else if(apps){
+        queryCount = 1;
+      }else{
+        //이 부분 에러 처리 할지?
+        queryCount = 0;
+      }
+      res.json({
+        'count':queryCount,
+          apps
+      });
+  }, function(err){
+    if(err)
       res.status(400).send('GET ALL, api/apps/ DB select error.');
-    }
-    apps = appRows;
-
-    if(Array.isArray(apps)){
-      queryCount = apps.length;
-    }else if(apps){
-      queryCount = 1;
-    }else{
-      //이 부분 에러 처리 할지?
-      queryCount = 0;
-    }
-
-    res.json({
-      'count':queryCount,
-        apps
-    });
+    else
+      console.log("All done.");
+  });
+  // pool.getConnection(function(err, connection){
+  //   appQuery = connection.query('select id, title from app_info', function(err, appRows, fields){
+  //     if (err) {
+  //       console.error(err);
+  //       res.status(400).send('GET ALL, api/apps/ DB select error.');
+  //     }
+  //     console.log(fields);
+  //     apps = appRows;
+  //
+  //     if(Array.isArray(apps)){
+  //       queryCount = apps.length;
+  //     }else if(apps){
+  //       queryCount = 1;
+  //     }else{
+  //       //이 부분 에러 처리 할지?
+  //       queryCount = 0;
+  //     }
+  //     connection.release();
+  //
+  //     res.json({
+  //       'count':queryCount,
+  //         apps
+  //     });
+  //   });
   });
 });
 
