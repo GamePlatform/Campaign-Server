@@ -20,7 +20,7 @@ router.get('/', function (req, res, next) {
       console.error(err);
       res.status(400).json({
         'code': -1,
-        'msg': 'queryErr',
+        'msg': 'query error',
         'result': err
       });
       //.send('GET ALL, api/apps/ DB select error.');
@@ -60,13 +60,15 @@ router.post('/', function (req, res) {
       console.error(err);
       res.status(400).json({
         'code': -1,
-        'msg': 'queryErr',
+        'msg': 'query error',
         'result': err
         //'error': 'POST, api/apps/, DB insert, error' 
       });
     }
     res.status(200).json({
-      'result': 'Your app has been successfully registered.'
+      'code': 0,
+      'msg': 'suc'
+      // 'result': 'Your app has been successfully registered.'
     });
   });
 });
@@ -80,16 +82,23 @@ router.put('/:appId', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': 'PUT ONE, api/apps/, DB update, error'
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': 'PUT ONE, api/apps/, DB update, error'
       });
     }
     if (appRows.affectedRows == 0) {
       res.status(400).json({
-        'error': 'PUT ONE, api/apps/, DB update, no data'
+        'code': -2,
+        'msg': 'nothing changed'
+        // 'error': 'PUT ONE, api/apps/, DB update, no data'
       });
     } else {
       res.status(200).json({
-        'result': 'Your app has been successfully updated.'
+        'code': 0,
+        'msg': 'suc'
+        // 'result': 'Your app has been successfully updated.'
       });
     }
   });
@@ -103,16 +112,23 @@ router.delete('/:appId', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': 'DELETE ONE, api/apps/, DB delete, error'
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': 'DELETE ONE, api/apps/, DB delete, error'
       });
     }
     if (appRows.affectedRows == 0) {
       res.status(400).json({
-        'error': 'DELETE ONE, api/apps/, DB delete, no data'
+        'code': -2,
+        'msg': 'nothing changed'
+        // 'error': 'DELETE ONE, api/apps/, DB delete, no data'
       });
     } else {
       res.status(200).json({
-        'result': 'Your app has been successfully deleted.'
+        'code': 0,
+        'msg': 'suc'
+        // 'result': 'Your app has been successfully deleted.'
       });
     }
   });
@@ -126,15 +142,24 @@ router.get('/:appId', function (req, res, next) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': 'GET ONE, api/apps/, DB select, error'
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': 'GET ONE, api/apps/, DB select, error'
       });
     }
     if (appRows == 0) {
       res.status(400).json({
-        'error': 'GET ONE, api/apps/, DB select, no data'
+        'code': -2,
+        'msg': 'nothing changed'
+        // 'error': 'GET ONE, api/apps/, DB select, no data'
       });
     } else {
-      res.status(200).json(appRows[0]);
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': appRows[0]
+      });
     }
   });
 });
@@ -164,7 +189,12 @@ router.get('/:appid/locations/:locationid/campaigns', function (req, res, next) 
   campaignQuery = connection.query(campaignsJoinQuery, [appId, locationId], function (err, camRows) {
     if (err) {
       console.error(err);
-      res.status(400).send('GET Campaigns, DB select error.');
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+      //send('GET Campaigns, DB select error.');
     } else {
       if (ecLength > 0) {
         for (var i = 0; i < camRows.length; i++) {
@@ -184,9 +214,13 @@ router.get('/:appid/locations/:locationid/campaigns', function (req, res, next) 
         queryCount = 0;
       }
 
-      res.json({
-        'count': queryCount,
-        campaigns
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': {
+          'count': queryCount,
+          campaigns
+        }
       });
     }
   });
@@ -209,11 +243,16 @@ router.post('/:appid/locations/:locationid/campaigns', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': 'POST, api/apps/, DB insert, error'
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': 'POST, api/apps/, DB insert, error'
       });
     } else {
       res.status(200).json({
-        'result': 'Your campaigns have been successfully registered.'
+        'code': 0,
+        'msg': 'suc'
+        // 'result': 'Your campaigns have been successfully registered.'
       });
     }
   });
@@ -236,16 +275,23 @@ router.delete('/:appid/locations/:locationid/campaigns', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': 'DELETE, api/apps/, DB delete, error'
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': 'DELETE, api/apps/, DB delete, error'
       });
     }
     if (appRows.affectedRows == 0) {
       res.status(400).json({
-        'error': 'DELETE ONE, api/apps/, DB delete, no data'
+        'code': -2,
+        'msg': 'nothing changed'
+        // 'error': 'DELETE ONE, api/apps/, DB delete, no data'
       });
     } else {
       res.status(200).json({
-        'result': 'Your app has been successfully deleted.'
+        'code': 0,
+        'msg': 'suc'
+        // 'result': 'Your app has been successfully deleted.'
       });
     }
   });
@@ -256,10 +302,15 @@ router.get('/:appid/locations', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': err
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+        // 'error': err
       });
     } else {
       res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
         'result': rows
       });
     }
@@ -271,10 +322,14 @@ router.get('/:appid/locations/:locationid', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': err
+        'code': -1,
+        'msg': 'query error',
+        'result': err
       });
     } else {
       res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
         'result': rows
       });
     }
@@ -287,11 +342,14 @@ router.post('/:appid/locations', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': err
+        'code': -1,
+        'msg': 'query error',
+        'result': err
       });
     } else {
       res.status(200).json({
-        'result': "Your location has been successfully registered."
+        'code': 0,
+        'msg': 'suc'
       });
     }
   });
@@ -313,11 +371,14 @@ router.delete('/:appid/locations', function (req, res) {
     if (err) {
       console.error(err);
       res.status(400).json({
-        'error': err
+        'code': -1,
+        'msg': 'query error',
+        'result': err
       });
     } else {
       res.status(200).json({
-        'result': "Your location has been successfully deleted."
+        'code': 0,
+        'msg': 'suc'
       });
     }
   });
