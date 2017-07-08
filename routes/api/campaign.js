@@ -23,7 +23,6 @@ router.get('/', function (req, res, next) {
         'msg': 'query error',
         'result': err
       });
-      //send('error'); // 에러처리에 대한 예비코드
       return;
     }
 
@@ -34,9 +33,6 @@ router.get('/', function (req, res, next) {
     } else {
       queryCount = 0;
     }
-
-    console.log(rows);
-    console.log(queryCount);
 
     res.status(200).json({
       'code': 0,
@@ -63,7 +59,6 @@ router.get('/:campaignid', function (req, res, next) {
         'msg': 'query error',
         'result': err
       });
-      //send('error'); // 에러처리에 대한 예비코드
       return;
     }
 
@@ -71,7 +66,6 @@ router.get('/:campaignid', function (req, res, next) {
       res.status(400).json({
         'code': -2,
         'msg': 'nothing changed'
-        // 'error': 'GET ONE, api/campaign/:campaingid, DB select, no data'
       });
     } else {
       res.status(200).json({
@@ -103,17 +97,13 @@ router.post('/url', function (req, res, next) {
         'msg': 'query error',
         'result': err
       });
-      //send('error'); // 에러처리에 대한 예비코드
       return;
     }
 
-    console.log(query.sql);
-    console.log("Number of records inserted: " + result.affectedRows);
     res.status(200).json({
       'code': 0,
       'msg': 'suc'
     });
-    //send('success');
   });
 });
 
@@ -124,12 +114,10 @@ router.post('/image', function (req, res, next) {
       'code': -3,
       'msg': 'invalid parameter'
     });
-    //send('No files were uploaded.');
   }
 
   let title = req.body.title;
   let uploadImage = req.files.uploadImage;
-  console.log(uploadImage.name);
   let filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
   let url = req.protocol + '://' + req.get('host') + "/" + filePath;
   let expireDay = req.body.expireDay;
@@ -149,7 +137,6 @@ router.post('/image', function (req, res, next) {
           'msg': 'transaction error',
           'result': err
         });
-        //send('error'); // 에러처리에 대한 예비코드
         return;
       });
     }
@@ -164,7 +151,6 @@ router.post('/image', function (req, res, next) {
             'msg': 'query error',
             'result': err
           });
-          //send('error'); // 에러처리에 대한 예비코드
           return;
         });
       }
@@ -180,15 +166,11 @@ router.post('/image', function (req, res, next) {
               'code': -5,
               'msg': 'upload error'
             });
-            //send('error'); // 에러처리에 대한 예비코드
             return;
           });
         }
-        console.log('File Uploaded!');
       });
 
-      console.log(query.sql);
-      console.log("Number of records inserted: " + result.affectedRows);
       connection.commit(function (err) {
         if (err) {
           console.error(err);
@@ -199,17 +181,14 @@ router.post('/image', function (req, res, next) {
               'code': -5,
               'msg': 'upload error'
             });
-            //send('error'); // 에러처리에 대한 예비코드
             return;
           });
         }
-        console.log('Transaction Complete.');
       });
       res.status(200).json({
         'code': 0,
         'msg': 'suc'
       });
-      //send('success');
     });
   });
 });
@@ -235,17 +214,13 @@ router.put('/:campaignid', function (req, res, next) {
         'msg': 'query error',
         'result': err
       });
-      //send('error'); // 에러처리에 대한 예비코드
       return;
     }
 
-    console.log(query.sql);
-    console.log("Number of records inserted: " + result.affectedRows);
     res.status(200).json({
       'code': 0,
       'msg': 'suc'
     });
-    //send('success');
   });
 });
 
