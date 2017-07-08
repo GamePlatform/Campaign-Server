@@ -18,7 +18,12 @@ router.get('/', function (req, res, next) {
   appQuery = connection.query('select id, title from app_info', function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).send('GET ALL, api/apps/ DB select error.');
+      res.status(400).json({
+        'code': -1,
+        'msg': 'queryErr',
+        'result': err
+      });
+      //.send('GET ALL, api/apps/ DB select error.');
     }
     apps = appRows;
 
@@ -31,9 +36,13 @@ router.get('/', function (req, res, next) {
       queryCount = 0;
     }
 
-    res.json({
-      'count': queryCount,
-      apps
+    res.status(200).json({
+      'code': 0,
+      'msg': 'suc',
+      'result': {
+        'count': queryCount,
+        apps
+      }
     });
   });
 });
@@ -49,9 +58,16 @@ router.post('/', function (req, res) {
   appQuery = connection.query('insert into app_info (title) values (?)', insertApp, function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'POST, api/apps/, DB insert, error' });
+      res.status(400).json({
+        'code': -1,
+        'msg': 'queryErr',
+        'result': err
+        //'error': 'POST, api/apps/, DB insert, error' 
+      });
     }
-    res.status(200).json({ 'result': 'Your app has been successfully registered.' });
+    res.status(200).json({
+      'result': 'Your app has been successfully registered.'
+    });
   });
 });
 
@@ -63,12 +79,18 @@ router.put('/:appId', function (req, res) {
   appQuery = connection.query('update app_info set title=? where id=?', [updateApp, appId], function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'PUT ONE, api/apps/, DB update, error' });
+      res.status(400).json({
+        'error': 'PUT ONE, api/apps/, DB update, error'
+      });
     }
     if (appRows.affectedRows == 0) {
-      res.status(400).json({ 'error': 'PUT ONE, api/apps/, DB update, no data' });
+      res.status(400).json({
+        'error': 'PUT ONE, api/apps/, DB update, no data'
+      });
     } else {
-      res.status(200).json({ 'result': 'Your app has been successfully updated.' });
+      res.status(200).json({
+        'result': 'Your app has been successfully updated.'
+      });
     }
   });
 });
@@ -80,12 +102,18 @@ router.delete('/:appId', function (req, res) {
   appQuery = connection.query('delete from app_info where id=?', appId, function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'DELETE ONE, api/apps/, DB delete, error' });
+      res.status(400).json({
+        'error': 'DELETE ONE, api/apps/, DB delete, error'
+      });
     }
     if (appRows.affectedRows == 0) {
-      res.status(400).json({ 'error': 'DELETE ONE, api/apps/, DB delete, no data' });
+      res.status(400).json({
+        'error': 'DELETE ONE, api/apps/, DB delete, no data'
+      });
     } else {
-      res.status(200).json({ 'result': 'Your app has been successfully deleted.' });
+      res.status(200).json({
+        'result': 'Your app has been successfully deleted.'
+      });
     }
   });
 });
@@ -97,10 +125,14 @@ router.get('/:appId', function (req, res, next) {
   appQuery = connection.query('select title from app_info where id=?', appId, function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'GET ONE, api/apps/, DB select, error' });
+      res.status(400).json({
+        'error': 'GET ONE, api/apps/, DB select, error'
+      });
     }
     if (appRows == 0) {
-      res.status(400).json({ 'error': 'GET ONE, api/apps/, DB select, no data' });
+      res.status(400).json({
+        'error': 'GET ONE, api/apps/, DB select, no data'
+      });
     } else {
       res.status(200).json(appRows[0]);
     }
@@ -133,8 +165,7 @@ router.get('/:appid/locations/:locationid/campaigns', function (req, res, next) 
     if (err) {
       console.error(err);
       res.status(400).send('GET Campaigns, DB select error.');
-    }
-    else {
+    } else {
       if (ecLength > 0) {
         for (var i = 0; i < camRows.length; i++) {
           if (ecArr.indexOf(camRows[i].campaign_id) < 0) {
@@ -177,10 +208,13 @@ router.post('/:appid/locations/:locationid/campaigns', function (req, res) {
   campaignsQuery = connection.query(enrollCampaignsQuery, [enrollCampaigns], function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'POST, api/apps/, DB insert, error' });
-    }
-    else {
-      res.status(200).json({ 'result': 'Your campaigns have been successfully registered.' });
+      res.status(400).json({
+        'error': 'POST, api/apps/, DB insert, error'
+      });
+    } else {
+      res.status(200).json({
+        'result': 'Your campaigns have been successfully registered.'
+      });
     }
   });
 });
@@ -201,51 +235,66 @@ router.delete('/:appid/locations/:locationid/campaigns', function (req, res) {
   campaignsQuery = connection.query(deleteCampaignsQuery, [deleteCampaigns], function (err, appRows) {
     if (err) {
       console.error(err);
-      res.status(400).json({ 'error': 'DELETE, api/apps/, DB delete, error' });
+      res.status(400).json({
+        'error': 'DELETE, api/apps/, DB delete, error'
+      });
     }
     if (appRows.affectedRows == 0) {
-      res.status(400).json({ 'error': 'DELETE ONE, api/apps/, DB delete, no data' });
+      res.status(400).json({
+        'error': 'DELETE ONE, api/apps/, DB delete, no data'
+      });
     } else {
-      res.status(200).json({ 'result': 'Your app has been successfully deleted.' });
+      res.status(200).json({
+        'result': 'Your app has been successfully deleted.'
+      });
     }
   });
 });
 
 router.get('/:appid/locations', function (req, res) {
-  campaignsQuery = connection.query('select location_id from location_for_app where app_id=?',
-    [req.params.appid], function (err, rows) {
-      if (err) {
-        console.error(err);
-        res.status(400).json({ 'error': err });
-      } else {
-        res.status(200).json({ 'result': rows });
-      }
-    });
+  campaignsQuery = connection.query('select location_id from location_for_app where app_id=?', [req.params.appid], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'error': err
+      });
+    } else {
+      res.status(200).json({
+        'result': rows
+      });
+    }
+  });
 });
 
 router.get('/:appid/locations/:locationid', function (req, res) {
-  campaignsQuery = connection.query('select * from location_for_app where app_id=? and location_id=?',
-    [req.params.appid, req.params.locationid], function (err, rows) {
-      if (err) {
-        console.error(err);
-        res.status(400).json({ 'error': err });
-      } else {
-        res.status(200).json({ 'result': rows });
-      }
-    });
+  campaignsQuery = connection.query('select * from location_for_app where app_id=? and location_id=?', [req.params.appid, req.params.locationid], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'error': err
+      });
+    } else {
+      res.status(200).json({
+        'result': rows
+      });
+    }
+  });
 });
 
 // insert into campaigndb.location_for_app (location_id, app_id, title) values (11, 3, 'HG4');
 router.post('/:appid/locations', function (req, res) {
-  campaignsQuery = connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)',
-    [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
-      if (err) {
-        console.error(err);
-        res.status(400).json({ 'error': err });
-      } else {
-        res.status(200).json({ 'result': "Your location has been successfully registered." });
-      }
-    });
+  campaignsQuery = connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'error': err
+      });
+    } else {
+      res.status(200).json({
+        'result': "Your location has been successfully registered."
+      });
+    }
+  });
 });
 
 router.delete('/:appid/locations', function (req, res) {
@@ -260,15 +309,18 @@ router.delete('/:appid/locations', function (req, res) {
     console.log(locationids[i]);
   }
 
-  campaignsQuery = connection.query('delete from location_for_app where (app_id, location_id) IN (?)',
-    [locationids], function (err, rows) {
-      if (err) {
-        console.error(err);
-        res.status(400).json({ 'error': err });
-      } else {
-        res.status(200).json({ 'result': "Your location has been successfully deleted." });
-      }
-    });
+  campaignsQuery = connection.query('delete from location_for_app where (app_id, location_id) IN (?)', [locationids], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'error': err
+      });
+    } else {
+      res.status(200).json({
+        'result': "Your location has been successfully deleted."
+      });
+    }
+  });
 });
 
 module.exports = router;
