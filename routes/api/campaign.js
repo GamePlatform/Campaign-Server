@@ -64,8 +64,8 @@ router.get('/:campaignid', function (req, res, next) {
 
     if (rows == 0) {
       res.status(400).json({
-        'code': -2,
-        'msg': 'nothing changed'
+        'code': -6,
+        'msg': 'noting to get'
       });
     } else {
       res.status(200).json({
