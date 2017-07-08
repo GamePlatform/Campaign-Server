@@ -25,9 +25,9 @@ function inTransaction(pool, body, callback){
                 if(err === 'rollback'){
                     args[0] = err = null;
                 }
-                db.rollback(function(){ done.apply(context, args) });
+                connection.rollback(function(){ done.apply(context, args) });
             }else{
-                db.commit(function(err){
+                connection.commit(function(err){
                     args[0] = err;
                     done.apply(context, args)
                 });

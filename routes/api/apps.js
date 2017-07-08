@@ -13,77 +13,49 @@ var dbModule = require('../../config/db.js');
 // });
 
 router.get('/', function(req, res, next) {
-  var appQuery;
-  var apps;
   var queryCount;
 
-  dbModule.withConnection(dbModule.pool, function(connection, next){
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query('select id, title from app_info', function(err, appRows, fields){
-      if (err) {
+      if (err)
         return next(err);
-      }
-      console.log(fields);
-      apps = appRows;
-
-      if(Array.isArray(apps)){
-        queryCount = apps.length;
-      }else if(apps){
+      if(Array.isArray(appRows)){
+        queryCount = appRows.length;
+      }else if(appRows){
         queryCount = 1;
       }else{
         //이 부분 에러 처리 할지?
         queryCount = 0;
       }
-      res.json({
-        'count':queryCount,
-          apps
-      });
+      return next(err, appRows, queryCount);
+    });
   }, function(err){
-    if(err)
-      res.status(400).send('GET ALL, api/apps/ DB select error.');
-    else
-      console.log("All done.");
-  });
-  // pool.getConnection(function(err, connection){
-  //   appQuery = connection.query('select id, title from app_info', function(err, appRows, fields){
-  //     if (err) {
-  //       console.error(err);
-  //       res.status(400).send('GET ALL, api/apps/ DB select error.');
-  //     }
-  //     console.log(fields);
-  //     apps = appRows;
-  //
-  //     if(Array.isArray(apps)){
-  //       queryCount = apps.length;
-  //     }else if(apps){
-  //       queryCount = 1;
-  //     }else{
-  //       //이 부분 에러 처리 할지?
-  //       queryCount = 0;
-  //     }
-  //     connection.release();
-  //
-  //     res.json({
-  //       'count':queryCount,
-  //         apps
-  //     });
-  //   });
+        var apps = arguments[1];
+        var appCount = arguments[2];
+        if(err)
+          res.status(400).send('GET ALL, api/apps/ DB select error.');
+        else
+          res.json({
+            'count':appCount,
+              apps
+          });
   });
 });
 
 router.post('/', function(req, res){
-  //논의 사항 - 요청하는 json 방식
-  // var app_info = {
-  //   'title': req.body.app_info[0].title
-  // };
-  var insertApp = req.body.app_info[0].title;
-  var appQuery;
+  var appTitle = req.body.app_info[0].title;
 
-  appQuery = connection.query('insert into app_info (title) values (?)', insertApp, function(err, appRows){
-    if (err) {
-      console.error(err);
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query('insert into app_info (title) values (?)', appTitle, function(err, appRows){
+      if (err)
+        return next(err);
+      return next(err);
+    });
+  }, function(err){
+    if(err)
       res.status(400).json({'error':'POST, api/apps/, DB insert, error'});
-    }
-    res.status(200).json({'result':'Your app has been successfully registered.'});
+    else
+      res.status(200).json({'result':'Your app has been successfully registered.'});
   });
 });
 
