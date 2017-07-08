@@ -54,7 +54,9 @@ router.get('/:campaignid', function (req, res, next) {
     }
 
     if (rows == 0) {
-      res.status(400).json({ 'error': 'GET ONE, api/campaign/:campaingid, DB select, no data' });
+      res.status(400).json({
+        'error': 'GET ONE, api/campaign/:campaingid, DB select, no data'
+      });
     } else {
       res.status(200).json(rows[0]);
     }
@@ -68,9 +70,9 @@ router.post('/url', function (req, res, next) {
   let startDate = req.body.startDate;
   let endDate = req.body.endDate;
 
-  var sql = 'insert into campaign_info '
-    + '(title,url,ad_expire_day,start_date,end_date)'
-    + 'values (?,?,?,?,?)';
+  var sql = 'insert into campaign_info ' +
+    '(title,url,ad_expire_day,start_date,end_date)' +
+    'values (?,?,?,?,?)';
 
   var query = connection.query(sql, [title, url, expireDay, startDate, endDate], function (err, result) {
     if (err) {
@@ -101,9 +103,9 @@ router.post('/image', function (req, res, next) {
   let startDate = req.body.startDate;
   let endDate = req.body.endDate;
 
-  var sql = 'insert into campaign_info '
-    + '(title,url,ad_expire_day,start_date,end_date)'
-    + 'values (?,?,?,?,?)';
+  var sql = 'insert into campaign_info ' +
+    '(title,url,ad_expire_day,start_date,end_date)' +
+    'values (?,?,?,?,?)';
   connection.beginTransaction(function (err) {
     if (err) {
       console.error(err);
@@ -163,9 +165,9 @@ router.put('/:campaignid', function (req, res, next) {
   let startDate = req.body.startDate;
   let endDate = req.body.endDate;
 
-  var sql = 'update campaign_info'
-    + ' set title= ?,url=?,ad_expire_day=?,start_date=?,end_date=?'
-    + ' where id = ?';
+  var sql = 'update campaign_info' +
+    ' set title= ?,url=?,ad_expire_day=?,start_date=?,end_date=?' +
+    ' where id = ?';
 
   var query = connection.query(sql, [title, url, expireDay, startDate, endDate, campaignId], function (err, result) {
     if (err) {
