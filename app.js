@@ -14,6 +14,9 @@ var appsApi = require('./routes/api/apps');
 
 var app = express();
 
+// view test
+var viewTest = require('./routes/viewtest');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -31,6 +34,7 @@ app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
+app.use('/view/test', viewTest);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+ 	<header>
+  		<%- include('../include/header.ejs') %>
+  	</header>
+  	<main>
+  		<%- include('../'+viewPage,data) %>	
+  	</main>
+  	<footer>
+  		<%- include('../include/footer.ejs') %>
+  	</footer>
+  </body>
+</html>
