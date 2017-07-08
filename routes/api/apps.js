@@ -83,8 +83,7 @@ router.put('/:appId', function (req, res) {
         'msg': 'query error',
         'result': err
       });
-    }
-    if (appRows.affectedRows == 0) {
+    } else if (appRows.affectedRows == 0) {
       res.status(400).json({
         'code': -2,
         'msg': 'nothing changed'
@@ -110,8 +109,7 @@ router.delete('/:appId', function (req, res) {
         'msg': 'query error',
         'result': err
       });
-    }
-    if (appRows.affectedRows == 0) {
+    } else if (appRows.affectedRows == 0) {
       res.status(400).json({
         'code': -2,
         'msg': 'nothing changed'
@@ -137,11 +135,10 @@ router.get('/:appId', function (req, res, next) {
         'msg': 'query error',
         'result': err
       });
-    }
-    if (appRows == 0) {
+    } else if (appRows == 0) {
       res.status(400).json({
-        'code': -2,
-        'msg': 'nothing changed'
+        'code': -6,
+        'msg': 'noting to get'
       });
     } else {
       res.status(200).json({
@@ -265,8 +262,7 @@ router.delete('/:appid/locations/:locationid/campaigns', function (req, res) {
         'msg': 'query error',
         'result': err
       });
-    }
-    if (appRows.affectedRows == 0) {
+    } else if (appRows.affectedRows == 0) {
       res.status(400).json({
         'code': -2,
         'msg': 'nothing changed'
@@ -318,7 +314,6 @@ router.get('/:appid/locations/:locationid', function (req, res) {
   });
 });
 
-// insert into campaigndb.location_for_app (location_id, app_id, title) values (11, 3, 'HG4');
 router.post('/:appid/locations', function (req, res) {
   campaignsQuery = connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
     if (err) {
@@ -344,11 +339,6 @@ router.delete('/:appid/locations', function (req, res) {
     locationids.push([req.params.appid, req.body.locationids[i]]);
   }
 
-  // for (var i = 0; i < req.body.locationids; i++) {
-  //   console.log(i);
-  //   console.log(locationids[i]);
-  // }
-
   campaignsQuery = connection.query('delete from location_for_app where (app_id, location_id) IN (?)', [locationids], function (err, rows) {
     if (err) {
       console.error(err);
@@ -356,6 +346,93 @@ router.delete('/:appid/locations', function (req, res) {
         'code': -1,
         'msg': 'query error',
         'result': err
+      });
+    } else if (!rows.affectedRows) {
+      res.status(400).json({
+        'code': -2,
+        'msg': 'nothing changed'
+      });
+    } else {
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
+    }
+  });
+});
+
+router.get('/:appid/devices', function (req, res) {
+  campaignsQuery = connection.query('select device_id from device_for_app where app_id=?', [req.params.appid], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    } else {
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': rows
+      });
+    }
+  });
+});
+
+router.get('/:appid/devices/:deviceid', function (req, res) {
+  campaignsQuery = connection.query('select * from device_for_app where app_id=? and device_id=?', [req.params.appid, req.params.deviceid], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    } else {
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': rows
+      });
+    }
+  });
+});
+
+router.post('/:appid/devices', function (req, res) {
+  campaignsQuery = connection.query('insert into device_for_app (app_id, device_id) values (?, ?)', [req.params.appid, req.body.deviceid], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    } else {
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
+    }
+  });
+});
+
+router.delete('/:appid/devices/:deviceid', function (req, res) {
+  //todo: 배열을 안만들고 한다면?
+  var devices = [];
+  devices.push([req.params.appid, req.params.deviceid]);
+  campaignsQuery = connection.query('delete from device_for_app where (app_id, device_id) in (?)', [devices], function (err, rows) {
+    if (err) {
+      console.error(err);
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    } else if (!rows.affectedRows) {
+      res.status(400).json({
+        'code': -2,
+        'msg': 'nothing changed'
       });
     } else {
       res.status(200).json({
