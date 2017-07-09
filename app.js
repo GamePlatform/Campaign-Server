@@ -18,6 +18,9 @@ var errorTest = require('./routes/api/errortest');
 
 var app = express();
 
+// view test
+var viewTest = require('./routes/viewtest');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -35,7 +38,8 @@ app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
-app.use('/test', errorTest);
+app.use('/error/test', errorTest);
+app.use('/view/test', viewTest);
 
 // error -this must be the last position in file
 // catch 404 and forward to error handler
@@ -65,8 +69,5 @@ fs.mkdir("upload_images",function(e){
         console.log(e);
     }
 });
-
-
-
 
 module.exports = app;
