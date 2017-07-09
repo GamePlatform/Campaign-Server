@@ -11,6 +11,10 @@ var index = require('./routes/index');
 var usersApi = require('./routes/api/users');
 var campaign = require('./routes/api/campaign');
 var appsApi = require('./routes/api/apps');
+var errorUtils = require('./error');
+
+//test js
+var errorTest = require('./routes/api/errortest');
 
 var app = express();
 
@@ -34,16 +38,18 @@ app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
+app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
 
+// error -this must be the last position in file
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  next(new Error('NotFound'));
 });
-
-// error handler
+app.use(errorUtils.logErrors);
+app.use(errorUtils.errorHandler);
+// basic error handler
+/*
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -53,6 +59,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+*/
 
 fs.mkdir("upload_images",function(e){
     if(!e || (e && e.code === 'EEXIST')){
