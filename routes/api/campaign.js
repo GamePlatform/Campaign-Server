@@ -9,20 +9,16 @@ router.get('/locations/:locationID', function(req, res, next){
     // res.send('good!');
     res.json({'images':[{'url':'http://wallpaper-gallery.net/images/image/image-13.jpg'},{'url':'https://www.w3schools.com/css/img_fjords.jpg'}]});
 });
-// 밍밍
 
-router.delete('/info', function(req, res, next){
+
+router.delete('/:campaignid', function(req, res, next){
     // request 안에서 campaignID'들'을 가져오기
-    var campIDArray = req.body.campaignID;
-    var ids = ""
-    for(var i=0; i<campIDArray.length; i++){
-        ids += " "+campIDArray[i];
+    var campid = req.param.campaignid;
 
-    }
 
     //db access -> delete infomation using id
+    "delete from campaign_info WHERE id = ? ", [campaignid]
 
-    //if (){
     res.send('success ids: ' + ids);
 
 
