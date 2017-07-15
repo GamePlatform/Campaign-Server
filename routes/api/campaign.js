@@ -30,7 +30,7 @@ router.delete('/:campaignid', function(req, res, next){
       console.log(err);
       return;
     }
-    console.log(query);
+  
 
     res.status(200).json({
       'code': 0,
@@ -38,4 +38,21 @@ router.delete('/:campaignid', function(req, res, next){
     });
   });
 });
-module.exports = router;
+
+router.delete('/', function(req, res, next){
+  var campids = req.body.campaignids;
+
+    var sql = "delete from campaign_info WHERE id in (?)";
+    var query = connection.query(sql, [campids], function (err, result){
+      if (err){
+        console.log(err);
+        return;
+      }
+
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
+    });
+  });
+  module.exports = router;
