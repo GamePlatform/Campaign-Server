@@ -4,14 +4,6 @@ var router = express.Router();
 
 var dbModule = require('../../config/db.js');
 
-// var connection = mysql.createConnection({
-//   host: 'localhost',
-//   port: 3306,
-//   user: 'root',
-//   password: 'root',
-//   database: 'campaigndb'
-// });
-
 router.get('/:appid/locations/:locationid/campaigns', function (req, res, next) {
   var appId = req.params.appid;
   var locationId = req.params.locationid;
@@ -138,26 +130,6 @@ router.delete('/:appid/locations/:locationid/campaigns', function (req, res) {
   });
 });
 
-//HG
-// router.get('/:appid/locations', function (req, res) {
-//   campaignsQuery = connection.query('select location_id from location_for_app where app_id=?', [req.params.appid], function (err, rows) {
-//     if (err) {
-//       console.error(err);
-//       res.status(400).json({
-//         'code': -1,
-//         'msg': 'query error',
-//         'result': err
-//       });
-//     } else {
-//       res.status(200).json({
-//         'code': 0,
-//         'msg': 'suc',
-//         'result': rows
-//       });
-//     }
-//   });
-// });
-
 router.get('/:appid/locations', function (req, res) {
   var getRows;
   dbModule.withConnection(dbModule.pool, function (connection, next) {
@@ -180,25 +152,6 @@ router.get('/:appid/locations', function (req, res) {
     }
   });
 });
-
-// router.get('/:appid/locations/:locationid', function (req, res) {
-//   campaignsQuery = connection.query('select * from location_for_app where app_id=? and location_id=?', [req.params.appid, req.params.locationid], function (err, rows) {
-//     if (err) {
-//       console.error(err);
-//       res.status(400).json({
-//         'code': -1,
-//         'msg': 'query error',
-//         'result': err
-//       });
-//     } else {
-//       res.status(200).json({
-//         'code': 0,
-//         'msg': 'suc',
-//         'result': rows
-//       });
-//     }
-//   });
-// });
 
 router.get('/:appid/locations/:locationid', function (req, res) {
   var getRow;
@@ -223,24 +176,6 @@ router.get('/:appid/locations/:locationid', function (req, res) {
   });
 });
 
-// router.post('/:appid/locations', function (req, res) {
-//   campaignsQuery = connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
-//     if (err) {
-//       console.error(err);
-//       res.status(400).json({
-//         'code': -1,
-//         'msg': 'query error',
-//         'result': err
-//       });
-//     } else {
-//       res.status(200).json({
-//         'code': 0,
-//         'msg': 'suc'
-//       });
-//     }
-//   });
-// });
-
 router.post('/:appid/locations', function (req, res) {
   dbModule.inTransaction(dbModule.pool, function (connection, next) {
     connection.query('insert into location_for_app (app_id, location_id, title) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.title], function (err, rows) {
@@ -262,36 +197,6 @@ router.post('/:appid/locations', function (req, res) {
     }
   });
 });
-
-
-// router.delete('/:appid/locations', function (req, res) {
-//   var locationids = [];
-
-//   for (var i = 0; i < req.body.locationids.length; i++) {
-//     locationids.push([req.params.appid, req.body.locationids[i]]);
-//   }
-
-//   campaignsQuery = connection.query('delete from location_for_app where (app_id, location_id) IN (?)', [locationids], function (err, rows) {
-//     if (err) {
-//       console.error(err);
-//       res.status(400).json({
-//         'code': -1,
-//         'msg': 'query error',
-//         'result': err
-//       });
-//     } else if (!rows.affectedRows) {
-//       res.status(400).json({
-//         'code': -2,
-//         'msg': 'nothing changed'
-//       });
-//     } else {
-//       res.status(200).json({
-//         'code': 0,
-//         'msg': 'suc'
-//       });
-//     }
-//   });
-// });
 
 router.delete('/:appid/locations', function (req, res) {
   var locationids = [];
