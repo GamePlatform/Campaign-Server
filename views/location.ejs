@@ -72,10 +72,10 @@
 			<div class="col-md-3">
 				<div class="bs-callout bs-callout-warning">
 					<h4>APP</h4>
-					<div>
+					<div id="apps">
 						<div align="right">
-							<button type="button" class="btn btn-info" >add</button>
-							<button type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+							<button id="app-add-btn" type="button" class="btn btn-info" >add</button>
+							<button id="app-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
 						</div>
 						<div>
 							<ol class="rounded-list">
@@ -91,10 +91,10 @@
   			<div class="col-md-3">
   				<div class="bs-callout bs-callout-primary">
 					<h4>Location</h4>
-					<div>
+					<div id="locations">
 						<div align="right">
-							<button type="button" class="btn btn-info" >add</button>
-							<button type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+							<button id="location-add-btn" type="button" class="btn btn-info" >add</button>
+							<button id="location-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
 						</div>
 						<div>
 							<ol class="rounded-list">
@@ -110,10 +110,10 @@
   			<div class="col-md-3">
   				<div class="bs-callout bs-callout-success">
 					<h4>Campaign</h4>
-					<div>
+					<div id="campaigns">
 						<div align="right">
-							<button type="button" class="btn btn-info" >add</button>
-							<button type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+							<button id="campaign-add-btn" type="button" class="btn btn-info" >add</button>
+							<button id="campaign-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
 						</div>
 						<div>
 							<ol class="rounded-list">
@@ -127,5 +127,46 @@
   			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+	"use strict";
+	$(document).ready(function(){
+		var apps = $('#apps');
+		var locations = $('#locations');
+		var campaigns = $('#campaigns');
+		var appAddBtn = $('#app-add-btn');
+		var appDelBtn = $('#app-del-btn');
+		var locationAddBtn = $('#location-add-btn');
+		var locationDelBtn = $('#location-del-btn');
+		var campaignAddBtn = $('#campaign-add-btn');
+		var campaignDelBtn = $('#campaign-del-btn');
+		
+		<%# app btn click event %>
+		appAddBtn.on('click',function(e){
+
+		});
+
+		appDelBtn.on('click',function(e){
+
+		});
+
+		<%# location btn click event %>
+		locationAddBtn.on('click',function(e){
+
+		});
+
+		locationDelBtn.on('click',function(e){
+
+		});
+
+		<%# campaign btn click event %>
+		campaignAddBtn.on('click',function(e){
+
+		});
+
+		campaignDelBtn.on('click',function(e){
+
+		});
+	});
+	</script>
   </body>
 </html>
