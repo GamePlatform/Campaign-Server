@@ -63,15 +63,18 @@ $(document).ready(function () {
     });
 
     $("#submit").click(function (event) {
+
         var param = {
             'template': $("input[name=template]:checked").val(),
             'title': $("input[name=title]").val(),
+            'desc': $("input[name=desc]").val(),
             'expireDay': $("input[name=expireDay]").val(),
             'urlType': $("input[name=urlType]:checked").val(),
             'url': $("input[name=url]").val(),
             'startDate': $("input[name=startDate]").val(),
             'endDate': $("input[name=endDate]").val(),
         };
+
         for (var key in param) {
             if (!param[key].length) {
                 alert(key + '항목을 입력해주세요.');
