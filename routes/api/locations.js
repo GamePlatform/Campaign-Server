@@ -7,7 +7,7 @@ var dbModule = require('../../config/db.js');
 router.get('/:appid/locations', function (req, res) {
   var getRows;
   dbModule.withConnection(dbModule.pool, function (connection, next) {
-    connection.query('select location_id from location_for_app where app_id=?', [req.params.appid], function (err, rows) {
+    connection.query('select * from location_for_app where app_id=?', [req.params.appid], function (err, rows) {
       if (err) {
         return next(err, 'GET ALL, api/apps/:appid/locations DB select error.');
       }
