@@ -23,7 +23,7 @@ $(document).ready(function(){
 		}
 	});
 	// init app-info
-	getAppInfo();
+	getAppList();
 
 	var appList = $('#app-list');
 	var appTitle = $('#app-title');
@@ -38,7 +38,7 @@ $(document).ready(function(){
 			method: "post",
 			success: function (result) {
 				appList.empty();
-				getAppInfo();		
+				getAppList();		
 			},
 			error: function (e) {
 				console.log(JSON.stringify(e));
@@ -70,6 +70,31 @@ $(document).ready(function(){
 		}
 	});
 
+	var locationList = $('#location-list');
+	var locationTitle = $('#location-title');
+	locationModal.on("click","input[name='ok']",function(e){
+		var locationIdValue = locationId.val();
+		var locationTitleValue = locationTitle.val();
+		location_info.push({"title":locationValue});
+		$.ajax({
+			url: 'http://localhost:30022/api/apps',
+			contentType: "application/json",
+			data: JSON.stringify(
+				{"locationid":locationIdValue},
+				{"title",locationTitleValue}),
+			method: "post",
+			success: function (result) {
+				appList.empty();
+				getAppInfo();		
+			},
+			error: function (e) {
+				console.log(JSON.stringify(e));
+			}
+		});	
+		locationIdValue = locationId.val('');
+		locationTitleValue = locationTitle.val('');	
+	});
+
 	locationDelBtn.on('click',function(e){
 
 	});
@@ -89,7 +114,7 @@ $(document).ready(function(){
 	});
 
 
-	function getAppInfo(){
+	function getAppList(){
 		$.ajax({
 			type: "GET",
 			url: 'http://localhost:30022/api/apps',
@@ -105,4 +130,20 @@ $(document).ready(function(){
 			}
 		});
 	}
+	function getLocationList(appId){
+		$.ajax({
+			type: "GET",
+			url: 'http://localhost:30022/api/apps/'+appId+'/locations',
+			success: function (result) {
+				var locationDatas = result.result;
+				for(var i=0, var length = locationDatas.length;i<length;i++){
+					locationList.append("<li><a name="+locationDatas[i].seq+">"+locationDatas[i].location_id+"</a></li>");
+				}
+			},
+			error: function (e) {
+				console.log(JSON.stringify(e));
+			}
+		});
+	}
+
 });
