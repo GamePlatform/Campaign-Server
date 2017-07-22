@@ -36,8 +36,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res){
-  console.log("app post");
-  console.log(req.body.app_info);
   var appTitle = req.body.app_info[0].title;
   var enrollAppQuery = 'insert into app_info (title) values (?)';
 
@@ -134,8 +132,8 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
     ecArr.push(parseInt(req.query.ec[i]));
   }
   var queryCount;
-  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.url, ci.template, ci.ad_expire_day ' +
-          'from campaign_for_location as cl inner join location_for_app as la on cl.location_id=la.location_id ' +
+  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.camp_desc, ci.url, ci.template, ci.ad_expire_day ' +
+          'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
           'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
           'where la.app_id=? and la.location_id=?';
   dbModule.withConnection(dbModule.pool, function(connection, next){

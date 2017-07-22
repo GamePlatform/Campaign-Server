@@ -52,14 +52,14 @@ router.get('/:appid/locations/:locationid', function (req, res) {
 
 router.post('/:appid/locations', function (req, res) {
   dbModule.inTransaction(dbModule.pool, function (connection, next) {
-    connection.query('insert into location_for_app (app_id, location_id, desc) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.desc], function (err, rows) {
+    connection.query('insert into location_for_app (app_id, location_id, loc_desc) values (?, ?, ?)', [req.params.appid, req.body.locationid, req.body.desc], function (err, rows) {
       if (err) {
         return next(err, 'POST locations, api/apps/:appid/locations, DB insert, error');
       }
       return next(err);
     });
   }, function (err, message) {
-    if (err || message !== undefined) {
+    if (err) {
       res.status(400).json({
         'error': message
       });
