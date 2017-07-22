@@ -86,15 +86,16 @@ router.get('/:campaignid', function (req, res, next) {
 router.post('/url', function (req, res, next) {
   var title = req.body.title;
   var url = req.body.url;
+  var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-  '(title,url,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?)';
+  '(title,url,template,ad_expire_day,start_date,end_date)' +
+  'values (?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [title, url, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
       }
@@ -129,15 +130,16 @@ router.post('/image', function (req, res, next) {
   var uploadImage = req.files.uploadImage;
   var filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
   var url = req.protocol + '://' + req.get('host') + "/" + filePath;
+  var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-  '(title,url,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?)';
+  '(title,url,template,ad_expire_day,start_date,end_date)' +
+  'values (?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [title, url, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
         res.status(400).json({
@@ -166,15 +168,16 @@ router.put('/:campaignid', function (req, res, next) {
   var campaignId = req.params.campaignid;
   var title = req.body.title;
   var url = req.body.url;
+  var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'update campaign_info' +
-  ' set title= ?,url=?,ad_expire_day=?,start_date=?,end_date=?' +
+  ' set title= ?,url=?,template=?,ad_expire_day=?,start_date=?,end_date=?' +
   ' where id = ?';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, expireDay, startDate, endDate, campaignId], function (err, result) {
+    connection.query(sql, [title, url,template, expireDay, startDate, endDate, campaignId], function (err, result) {
       if (err) {
         return next(err);
       }
