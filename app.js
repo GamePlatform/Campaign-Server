@@ -18,6 +18,11 @@ var errorUtils = require('./error');
 // test js
 var errorTest = require('./routes/api/errortest');
 var app = express();
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 // view
 var viewTest = require('./routes/views/viewtest');
 var appLocation = require('./routes/views/app-location');

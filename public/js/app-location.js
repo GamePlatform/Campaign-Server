@@ -35,7 +35,7 @@ $(document).ready(function(){
 		var appValue = appTitle.val();
 		app_info.push({"title":appValue});
 		$.ajax({
-			url: 'http://localhost:30022/api/apps',
+			url: '/api/apps',
 			contentType: "application/json",
 			data: JSON.stringify({"app_info":app_info}),
 			method: "post",
@@ -82,17 +82,17 @@ $(document).ready(function(){
 	});
 
 	var locationList = $('#location-list');
-	var locationId = $('#location-id');
+	var locationInputId = $('#location-id');
 	var locationDesc = $('#location-desc');
 	locationModal.on("click","input[name='ok']",function(e){
-		var locationIdValue = locationId.val();
+		var locationInputIdValue = locationInputId.val();
 		var locationDescValue = locationDesc.val();
 		$.ajax({
-			url: 'http://localhost:30022/api/apps/'+appId+'/locations',
+			url: '/api/apps/'+appId+'/locations',
 			contentType: "application/json",
 			data:
 			JSON.stringify({
-				"locationid":locationIdValue,
+				"locationid":locationInputIdValue,
 				"desc":locationDescValue
 			}),
 			method: "post",
@@ -105,14 +105,15 @@ $(document).ready(function(){
 				console.log(JSON.stringify(e));
 			}
 		});
-		locationId.val('');
+		locationInputId.val('');
 		locationDesc.val('');
 	});
 
+	var locationSelectIdValue;
 	locationList.on("click","a",function(e){
-		locationId = $(this).text();
+		locationSelectIdValue = $(this).text();
 		campaignList.empty();
-		getCampaignListForLocation(appId,locationId);
+		getCampaignListForLocation(appId,locationSelectIdValue);
 	});
 
 	locationDelBtn.on('click',function(e){
@@ -158,14 +159,14 @@ $(document).ready(function(){
 
 	campaignModal.on("click","input[name='ok']",function(e){
 		$.ajax({
-			url: 'http://localhost:30022/api/apps/'+appId+'/locations/'
-				+locationId+'/campaigns',
+			url: '/api/apps/'+appId+'/locations/'
+				+locationSelectIdValue+'/campaigns',
 			contentType: "application/json",
 			data: JSON.stringify({"campaigns":campaignIds}),
 			method: "post",
 			success: function (result) {
 				campaignList.empty();
-				getCampaignListForLocation(appId,locationId);
+				getCampaignListForLocation(appId,locationSelectIdValue);
 			},
 			error: function (e) {
 				console.log(JSON.stringify(e));
@@ -180,7 +181,7 @@ $(document).ready(function(){
 	function getAppList(){
 		$.ajax({
 			type: "GET",
-			url: 'http://localhost:30022/api/apps',
+			url: '/api/apps',
 			success: function (result) {
 				var count=result.count;
 				var appDatas = result.apps;
@@ -197,7 +198,7 @@ $(document).ready(function(){
 	function getCampaignList(){
 		$.ajax({
 			type: "GET",
-			url: 'http://localhost:30022/api/campaigns',
+			url: '/api/campaigns',
 			success: function (result) {
 				var count = result.result.count;
 				var campaignsData = result.result.campaigns;
@@ -230,7 +231,7 @@ $(document).ready(function(){
 	function getLocationList(appId){
 		$.ajax({
 			type: "GET",
-			url: 'http://localhost:30022/api/apps/'+appId+'/locations',
+			url: '/api/apps/'+appId+'/locations',
 			success: function (result) {
 				var locationDatas = result.result;
 				for(var i=0, length = locationDatas.length;i<length;i++){
@@ -246,7 +247,7 @@ $(document).ready(function(){
 	function getCampaignListForLocation(appId,locationId){
 		$.ajax({
 			type: "GET",
-			url: 'http://localhost:30022/api/apps/'+appId+'/locations/'+locationId+'/campaigns',
+			url: '/api/apps/'+appId+'/locations/'+locationId+'/campaigns',
 			success: function (result) {
 				var campaignDatas = result.campaigns;
 

@@ -83,7 +83,7 @@ $(document).ready(function () {
         }
         $.ajax({
             type: "POST",
-            url: 'http://localhost:30022/api/campaigns/url',
+            url: '/api/campaigns/url',
             data: param,
             success: function (e) {
                 console.log(e);
