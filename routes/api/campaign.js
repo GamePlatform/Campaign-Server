@@ -86,16 +86,17 @@ router.get('/:campaignid', function (req, res, next) {
 router.post('/url', function (req, res, next) {
   var title = req.body.title;
   var url = req.body.url;
+  var desc = req.body.desc;
   var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-  '(title,url,template,ad_expire_day,start_date,end_date)' +
+  '(title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
   'values (?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
       }
@@ -130,16 +131,17 @@ router.post('/image', function (req, res, next) {
   var uploadImage = req.files.uploadImage;
   var filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
   var url = req.protocol + '://' + req.get('host') + "/" + filePath;
+  var desc = req.body.desc;
   var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-  '(title,url,template,ad_expire_day,start_date,end_date)' +
+  '(title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
   'values (?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
         res.status(400).json({
@@ -168,16 +170,17 @@ router.put('/:campaignid', function (req, res, next) {
   var campaignId = req.params.campaignid;
   var title = req.body.title;
   var url = req.body.url;
+  var desc = req.body.desc;
   var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
   var sql = 'update campaign_info' +
-  ' set title= ?,url=?,template=?,ad_expire_day=?,start_date=?,end_date=?' +
+  ' set title= ?,camp_desc= ?,url=?,template=?,ad_expire_day=?,start_date=?,end_date=?' +
   ' where id = ?';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url,template, expireDay, startDate, endDate, campaignId], function (err, result) {
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate, campaignId], function (err, result) {
       if (err) {
         return next(err);
       }
@@ -203,7 +206,7 @@ router.put('/:campaignid', function (req, res, next) {
 router.delete('/:campaignid', function(req, res, next){
   // request 안에서 campaignID'들'을 가져오기
   var campid = req.params.campaignid;
-  var sql = "devare from campaign_info WHERE id = ? ";
+  var sql = "delete from campaign_info WHERE id = ? ";
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(sql, [campid], function (err, result){
       if (err){
@@ -230,7 +233,7 @@ router.delete('/:campaignid', function(req, res, next){
 router.delete('/', function(req, res, next){
   var campids = req.body.campaignids;
 
-  var sql = "devare from campaign_info WHERE id in (?)";
+  var sql = "delete from campaign_info WHERE id in (?)";
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(sql, [campids], function (err, result){
       if (err){
