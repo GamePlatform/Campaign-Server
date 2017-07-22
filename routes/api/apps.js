@@ -4,14 +4,6 @@ var router = express.Router();
 
 var dbModule = require('../../config/db.js');
 
-// var connection = mysql.createConnection({
-//   host:'localhost',
-//   port:3306,
-//   user:'root',
-//   password:'root',
-//   database:'campaigndb'
-// });
-
 router.get('/', function(req, res, next) {
   var queryCount;
   var getAllAppsQuery = 'select id, title from app_info';
