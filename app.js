@@ -21,6 +21,7 @@ var app = express();
 // view
 var viewTest = require('./routes/views/viewtest');
 var appLocation = require('./routes/views/app-location');
+var campView = require('./routes/views/campaign');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,6 +45,7 @@ app.use('/api/apps', devicesApi);
 app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
 app.use('/app-location', appLocation);
+app.use('/campaign', campView);
 
 // error -this must be the last position in file
 // catch 404 and forward to error handler

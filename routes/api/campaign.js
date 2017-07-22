@@ -94,7 +94,7 @@ router.post('/url', function (req, res, next) {
 
   var sql = 'insert into campaign_info ' +
   '(title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?,?)';
+  'values (?,?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
