@@ -1,0 +1,104 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="bs-callout bs-callout-warning">
+				<h4>APP</h4>
+				<div id="apps">
+					<div align="right">
+						<button id="app-add-btn" type="button" class="btn btn-info" >add</button>
+						<button id="app-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+					</div>
+					<div>
+						<ol id="app-list"class="rounded-list">
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"><aside></aside></div>
+		<div class="col-md-3">
+			<div class="bs-callout bs-callout-primary">
+				<h4>Location</h4>
+				<div id="locations">
+					<div align="right">
+						<button id="location-add-btn" type="button" class="btn btn-info" >add</button>
+						<button id="location-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+					</div>
+					<div>
+						<ol id="location-list" class="rounded-list">
+							<li><a>list1</a></li>
+							<li><a>list2</a></li>
+							<li><a>list3</a></li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-1"><aside></aside></div>
+		<div class="col-md-3">
+			<div class="bs-callout bs-callout-success">
+				<h4>Campaign</h4>
+				<div id="campaigns">
+					<div align="right">
+						<button id="campaign-add-btn" type="button" class="btn btn-info" >add</button>
+						<button id="campaign-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+					</div>
+					<div>
+						<ol id="campaign-list" class="rounded-list">
+							<li><a>list1</a></li>
+							<li><a>list2</a></li>
+							<li><a>list3</a></li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="app_modal">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<form>
+				<div>
+					앱 이름: <input id="app-title" type="text">
+				</div>
+				<div>
+					<input name="ok" class="btn btn-default" value="등록">
+					<input name="cancel" type="reset" value="취소">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="location_modal">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<form>
+				<div>
+					Location 이름: <input id="location-title" type="text">
+				</div>
+				<div>
+					<input name="ok" class="btn btn-default" value="등록">
+					<input name="cancel" type="reset" value="취소">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="campaign_modal">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+			<form>
+				<div>
+					Campaign List
+				</div>
+				<div>
+					<input name="ok" class="btn btn-default" value="등록">
+					<input name="cancel" type="reset" value="취소">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="/js/app-location.js"></script>
