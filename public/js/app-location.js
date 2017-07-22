@@ -13,8 +13,7 @@ $(document).ready(function(){
 	var locationModal = $('div#location_modal');
 	var campaignModal = $('div#campaign_modal');
 
-	var enrollCampaignList = $('#enroll-campaign-list');
-	var campaignList = $('#campaign-list');
+	var modalCampaignList = $('#modal-campaign-list');
 	// var campaignTitle = $('#campaign-title');
 
 	appAddBtn.on('click',function(e){
@@ -51,41 +50,6 @@ $(document).ready(function(){
 		appTitle.val('');
 	});
 
-	var campaignIds = []
-	campaignModal.on("click","a",function(e){
-		// console.log(selectedCampaign);
-		var selectCampaign = $(this);
-		var campaignId = selectCampaign.attr('name');
-
-		console.log(campaignId);
-		if(selectCampaign.hasClass('checked')){
-			selectCampaign.removeClass('checked');
-			campaignIds.splice(campaignId);
-		}else{
-			selectCampaign.addClass('checked');
-			campaignIds.push(campaignId);
-		}
-	});
-
-	// campaignModal.on("click","input[name='ok']",function(e){
-	// 	var campaign_info = []
-	// 	var campaignValue = appTitle.val();
-	// 	campaign_info.push({"title":appValue});
-	// 	$.ajax({
-	// 		url: 'http://localhost:30022/api/apps',
-	// 		contentType: "application/json",
-	// 		data: JSON.stringify({"app_info":app_info}),
-	// 		method: "post",
-	// 		success: function (result) {
-	// 			appList.empty();
-	// 			getAppInfo();
-	// 		},
-	// 		error: function (e) {
-	// 			console.log(JSON.stringify(e));
-	// 		}
-	// 	});
-	// 	appTitle.val('');
-	// });
 	var appId;
 	appList.on("click","a",function(e){
 		appId = $(this).attr("name");
@@ -130,11 +94,11 @@ $(document).ready(function(){
 			JSON.stringify({
 				"locationid":locationIdValue,
 				"desc":locationDescValue
-				}),
+			}),
 			method: "post",
 			success: function (result) {
 				locationList.empty();
-				campaginList.empty();
+				campaignList.empty();
 				getLocationList(appId);
 			},
 			error: function (e) {
@@ -148,7 +112,7 @@ $(document).ready(function(){
 	locationList.on("click","a",function(e){
 		locationId = $(this).text();
 		campaignList.empty();
-		getCampaignList(appId,locationId);
+		getCampaignListForLocation(appId,locationId);
 	});
 
 	locationDelBtn.on('click',function(e){
@@ -158,6 +122,7 @@ $(document).ready(function(){
 
 	campaignAddBtn.on('click',function(e){
 		if(campaignModal.hasClass("hidden")){
+			modalCampaignList.empty();
 			getCampaignList();
 			campaignModal.show();
 			campaignModal.removeClass("hidden");
@@ -168,11 +133,49 @@ $(document).ready(function(){
 	});
 
 	var campaignList = $('#campaign-list');
-	var campaignIDs = [];
+
+	var campaignIds = []
+	campaignModal.on("click","a",function(e){
+		var selectCampaign = $(this);
+		var campaignId = parseInt(selectCampaign.attr('name'));
+		var campaignOrderInput = selectCampaign.siblings('input[name="order"]').eq(0);
+
+		var campaignOrder = campaignOrderInput.val();
+		if(selectCampaign.hasClass('selectedCampaign')){
+			var index = campaignIds.map(function(d){ return d.campaign_id; }).indexOf(campaignId);
+			selectCampaign.removeClass('selectedCampaign');
+			campaignIds.splice(index,1);
+			campaignOrderInput.val('');
+		}else{
+			selectCampaign.addClass('selectedCampaign');
+			campaignIds.push({"campaign_id":campaignId,"campaign_order":parseInt(campaignOrder)});
+		}
+	});
+
 	campaignDelBtn.on('click',function(e){
 
 	});
 
+	campaignModal.on("click","input[name='ok']",function(e){
+		$.ajax({
+			url: 'http://localhost:30022/api/apps/'+appId+'/locations/'
+				+locationId+'/campaigns',
+			contentType: "application/json",
+			data: JSON.stringify({"campaigns":campaignIds}),
+			method: "post",
+			success: function (result) {
+				campaignList.empty();
+				getCampaignListForLocation(appId,locationId);
+			},
+			error: function (e) {
+				console.log(JSON.stringify(e));
+			}
+		});
+		modalCampaignList.empty();
+		campaignModal.hide();
+		campaignModal.addClass("hidden");
+	});
+	
 
 	function getAppList(){
 		$.ajax({
@@ -198,42 +201,65 @@ $(document).ready(function(){
 			success: function (result) {
 				var count = result.result.count;
 				var campaignsData = result.result.campaigns;
+				var existCamp = "";
+				var idx ="";
+				var camp_order = "";
 				for(var i = 0; i < count; i++){
-					campaignList.append("<li><a name="+campaignsData[i].id+">"+campaignsData[i].title+"</a></li>");
+					existCamp = "";
+					if(i < campaignIds.length){
+						idx = campaignIds.map(function(d){ return d.campaign_id; }).indexOf(campaignsData[i].id);
+					}else{
+						idx = -1;
+					}
+					camp_order = "";
+					if(idx != -1){
+						existCamp = "class='selectedCampaign'";
+						camp_order = campaignIds[idx].campaign_order;
+					}
+					modalCampaignList.append("<li><a name='"+campaignsData[i].id+"' "+existCamp+">"
+						+campaignsData[i].camp_desc+"</a>"
+						+"<input type='text' name='order' value='"+camp_order+"'></li>");
 				}
 			},
 			error: function (e) {
 				console.log(JSON.stringify(e));
 			}
-	});
-}
+		});
+	}
 
-function getLocationList(appId){
-	$.ajax({
-		type: "GET",
-		url: 'http://localhost:30022/api/apps/'+appId+'/locations',
-		success: function (result) {
-			var locationDatas = result.result;
-			for(var i=0, length = locationDatas.length;i<length;i++){
-				locationList.append("<li><a name="+locationDatas[i].seq+">"+locationDatas[i].location_id+"</a></li>");
+	function getLocationList(appId){
+		$.ajax({
+			type: "GET",
+			url: 'http://localhost:30022/api/apps/'+appId+'/locations',
+			success: function (result) {
+				var locationDatas = result.result;
+				for(var i=0, length = locationDatas.length;i<length;i++){
+					locationList.append("<li><a name="+locationDatas[i].seq+">"+locationDatas[i].location_id+"</a></li>");
+				}
+			},
+			error: function (e) {
+				console.log(JSON.stringify(e));
 			}
-		},
-		error: function (e) {
-			console.log(JSON.stringify(e));
-		}
-	});
-}
-function getCampaignList(appId,locationId){
+		});
+	}
+
+	function getCampaignListForLocation(appId,locationId){
 		$.ajax({
 			type: "GET",
 			url: 'http://localhost:30022/api/apps/'+appId+'/locations/'+locationId+'/campaigns',
 			success: function (result) {
 				var campaignDatas = result.campaigns;
-				campaignIDs = [];
+
+				campaignDatas.sort(function(a,b){
+					return a.campaign_order - b.campaign_order;
+				});
+
+				campaignIds = [];
 				for(var i=0, length = campaignDatas.length;i<length;i++){
 					campaignList.append("<li><a>"+campaignDatas[i].camp_desc+"</a></li>");
-					campaignIDs.push(campaignDatas[i].id);
+					campaignIds.push({"campaign_id":campaignDatas[i].campaign_id,"campaign_order":campaignDatas[i].campaign_order});
 				}
+
 			},
 			error: function (e) {
 				console.log(JSON.stringify(e));
