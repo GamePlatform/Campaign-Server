@@ -133,7 +133,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
   }
   var queryCount;
   var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.url, ci.ad_expire_day ' +
-          'from campaign_for_location as cl inner join location_for_app as la on cl.location_id=la.location_id ' +
+          'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
           'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
           'where la.app_id=? and la.location_id=?';
   dbModule.withConnection(dbModule.pool, function(connection, next){
@@ -176,7 +176,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
 
 router.post('/:appid/locations/:locationid/campaigns', function(req, res){
   var appId = parseInt(req.params.appid);
-  var locationId = parseInt(req.params.locationid);
+  var locationId = req.params.locationid;
   var campaigns = req.body.campaigns;
   var enrollCampaigns = [];
   var enrollCampaignsQuery;
@@ -203,15 +203,15 @@ router.post('/:appid/locations/:locationid/campaigns', function(req, res){
 
 router.delete('/:appid/locations/:locationid/campaigns', function(req, res){
   var appId = parseInt(req.params.appid);
-  var locationId = parseInt(req.params.locationid);
+  var locationSeq = req.params.locationSeq;
   var campaigns = req.body.campaigns;
   var deleteCampaigns = [];
   var deleteCampaignsQuery;
 
   for(var i=0;i<campaigns.length;i++){
-    deleteCampaigns.push([locationId, campaigns[i].campaign_id]);
+    deleteCampaigns.push([locationSeq, campaigns[i].campaign_id]);
   }
-  deleteCampaignsQuery = 'delete from campaign_for_location where (location_id, campaign_id) in (?)';
+  deleteCampaignsQuery = 'delete from campaign_for_location where (location_seq, campaign_id) in (?)';
 
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(deleteCampaignsQuery, [deleteCampaigns], function(err, appRows, fields){
