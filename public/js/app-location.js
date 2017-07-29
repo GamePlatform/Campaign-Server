@@ -51,7 +51,14 @@ $(document).ready(function(){
 	});
 
 	var appId;
+	var highlightApp
 	appList.on("click","a",function(e){
+		var divParent=$(this).closest('div');
+		if(highlightApp!=null){
+			highlightApp.removeClass('highlight');
+		}
+		highlightApp=divParent.addClass('highlight');
+
 		appId = $(this).attr("name");
 		locationList.empty();
 		campaignList.empty();
@@ -110,7 +117,14 @@ $(document).ready(function(){
 	});
 
 	var locationSelectIdValue;
+	var highlightLocation;
 	locationList.on("click","a",function(e){
+		var divParent=$(this).closest('div');
+		if(highlightLocation!=null){
+			highlightLocation.removeClass('highlight');
+		}
+		highlightLocation=divParent.addClass('highlight');
+
 		locationSelectIdValue = $(this).text();
 		campaignList.empty();
 		getCampaignListForLocation(appId,locationSelectIdValue);
@@ -137,6 +151,12 @@ $(document).ready(function(){
 
 	var campaignIds = []
 	campaignModal.on("click","a",function(e){
+		var divParent=$(this).closest('div');
+		if(divParent.hasClass('highlight')){
+			divParent.removeClass('highlight');
+		}else{
+			divParent.addClass('highlight');
+		}
 		var selectCampaign = $(this);
 		var campaignId = parseInt(selectCampaign.attr('name'));
 		var campaignOrderInput = selectCampaign.siblings('input[name="order"]').eq(0);
@@ -186,7 +206,7 @@ $(document).ready(function(){
 				var count=result.count;
 				var appDatas = result.apps;
 				for(var i=0;i<count;i++){
-					appList.append("<li><a name="+appDatas[i].id+">"+appDatas[i].title+"</a></li>");
+					appList.append("<li><div><a name="+appDatas[i].id+">"+appDatas[i].title+"</a></div></li>");
 				}
 			},
 			error: function (e) {
@@ -214,12 +234,12 @@ $(document).ready(function(){
 					}
 					camp_order = "";
 					if(idx != -1){
-						existCamp = "class='selectedCampaign'";
+						existCamp = "class='highlight'";
 						camp_order = campaignIds[idx].campaign_order;
 					}
-					modalCampaignList.append("<li><a name='"+campaignsData[i].id+"' "+existCamp+">"
+					modalCampaignList.append("<li><div "+existCamp+"><a name='"+campaignsData[i].id+"'>"
 						+campaignsData[i].camp_desc+"</a>"
-						+"<input type='text' name='order' value='"+camp_order+"'></li>");
+						+"<input type='text' name='order' value='"+camp_order+"'></div></li>");
 				}
 			},
 			error: function (e) {
@@ -235,7 +255,7 @@ $(document).ready(function(){
 			success: function (result) {
 				var locationDatas = result.result;
 				for(var i=0, length = locationDatas.length;i<length;i++){
-					locationList.append("<li><a name="+locationDatas[i].seq+">"+locationDatas[i].location_id+"</a></li>");
+					locationList.append("<li><div><a name="+locationDatas[i].seq+">"+locationDatas[i].location_id+"</a></div></li>");
 				}
 			},
 			error: function (e) {
@@ -264,7 +284,8 @@ $(document).ready(function(){
 			},
 			error: function (e) {
 				console.log(JSON.stringify(e));
-			}
+			},
+
 		});
 	}
 });
