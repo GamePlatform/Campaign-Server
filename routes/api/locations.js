@@ -73,11 +73,18 @@ router.post('/:appid/locations', function (req, res) {
 });
 
 router.delete('/:appid/locations', function (req, res) {
-  var seqs = req.body.seq;
+  var locations = req.body.location_list;
   var appId = req.params.appid;
 
+  var deleteLocationList = [];
+  var deleteLocationQuery = 'delete from location_for_app where app_id = '+ appId +' AND seq IN (?)';
+
+  for(var i=0;i<locations.length;i++){
+    deleteLocationList.push(locations[i].seq);
+  }
+
   dbModule.inTransaction(dbModule.pool, function (connection, next) {
-    connection.query('delete from location_for_app where app_id = ? AND seq IN (?)', [appId,seqs], function (err, rows) {
+    connection.query(deleteLocationQuery, [deleteLocationList], function (err, rows) {
       if (err) {
         return next(err, 'DELETE ALL, api/apps/:appid/locations, DB delete, error');
       } else if (!rows.affectedRows) {
