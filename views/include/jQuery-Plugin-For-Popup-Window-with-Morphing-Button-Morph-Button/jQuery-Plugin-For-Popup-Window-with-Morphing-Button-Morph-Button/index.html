@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery Morphing Buttons</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Morphbutton -->
+    <link href="css/morphbutton.css" rel="stylesheet">
+
+    <!-- Demo -->
+    <link href="css/demo.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+    <div class="container text-center">
+      <h1>jQuery Morphing Buttons</h1>
+      <h2>jQuery plugin inspired by <a href="http://tympanus.net/Development/ButtonComponentMorph/index.html ">http://tympanus.net</a></h2>
+
+       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+      
+      <p>
+        <a href="#" class="morphbutton big-button" data-target="#test">Sign up</a>
+      </p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+
+      <p>
+        <a href="#" class="morphbutton big-button" data-target="#test2">Test with text</a>
+      </p>
+
+      <p>Curabitur imperdiet mauris lacus, ut viverra ante. Suspendisse eu leo metus, non varius turpis. Phasellus et odio nibh, ultrices fringilla dolor. Nam placerat euismod sapien, id euismod metus tristique ac. Cras vitae nisi tellus, in consectetur massa. Nullam auctor hendrerit dapibus. Suspendisse auctor velit non turpis scelerisque tempor. Nam fringilla velit ut augue eleifend id tempor sem gravida.</p>
+
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula.</p>
+
+    </div>
+
+
+    <div id="test" class="morphbutton-content">
+      <div class="box">
+        <h2>Sign up</h2>
+        <button type="button" class="morphbutton-close"><span class="glyphicon glyphicon-remove"></span></button>
+        <form class="form-horizontal morphbutton-cascade" role="form">
+          <input type="text" placeholder="username">
+          <input type="password" placeholder="password">
+          <input type="submit" value="Sign up">
+        </form>
+      </div>
+    </div>
+
+
+    <div id="test2" class="morphbutton-content">
+      <div class="box">
+        <h2>Test with text</h2>
+        <button type="button" class="morphbutton-close"><span class="glyphicon glyphicon-remove"></span></button>
+        <div class="morphbutton-cascade">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sed sem lectus. Donec diam metus, luctus ac tempus quis, imperdiet ut ligula. Curabitur imperdiet mauris lacus, ut viverra ante. Suspendisse eu leo metus, non varius turpis. Phasellus et odio nibh, ultrices fringilla dolor. Nam placerat euismod sapien, id euismod metus .</p>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.morphbutton.js"></script>
+  </body>
+</html>
