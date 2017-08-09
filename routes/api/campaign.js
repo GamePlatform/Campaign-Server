@@ -91,12 +91,18 @@ router.post('/url', function (req, res, next) {
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
+  var ratio_x = req.body.ratio_x;
+  var ratio_y = req.body.ratio_y;
+  var is_url = req.body.is_url;
+  var redirect_location = req.body.redirect_location;
+
+  // console.log('mhg',ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate);
 
   var sql = 'insert into campaign_info ' +
-  '(title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?,?,?)';
+  '(ratio,is_url,redirect_location,title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
+  'values (POINT(?,?),?,?,?,?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
       }
