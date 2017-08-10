@@ -150,7 +150,7 @@ router.post('/image', function (req, res, next) {
           'result': err
         });
       }
-        // Use the mv() method to place the file somewhere on your server 
+        // Use the mv() method to place the file somewhere on your server
         uploadImage.mv(filePath, function (err) {
           if (err) {
             return next(err);
@@ -257,4 +257,3 @@ router.delete('/', function(req, res, next){
   });
 });
 module.exports = router;
-
