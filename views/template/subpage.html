@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>1</title>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link href="../../public/stylesheets/test.css" rel="stylesheet">
+  <script
+  src="http://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  <style type="text/css">
+  .morphbutton-content {
+    background-color: #a7ddf9;
+    color: #fff;
+  }
+  </style>
+</head>
+<body>
+  <div class="morphbutton">
+    <button type="button" class="btn btn-primary morphbutton-open">Open</button>
+    <div class="morphbutton-content" style="top: 234px; left: 0px; width: 60px; height: 34px; opacity: 0;">
+      <button type="button" class="morphbutton-close"><span class="glyphicon glyphicon-remove"></span></button>
+      <form class="form-horizontal" role="form">
+        <fieldset>
+
+          <!-- Form Name -->
+          <legend>Campaign Details</legend>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">desc</label>
+            <div class="col-sm-10">
+              <input type="text" placeholder="camp_desc" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">title</label>
+            <div class="col-sm-10">
+              <input type="text" placeholder="camp_title" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">url</label>
+            <div class="col-sm-10">
+              <input type="text" placeholder="camp_url" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">start</label>
+            <div class="col-sm-4">
+              <input type="text" placeholder="start_day" class="form-control">
+            </div>
+            <label class="col-sm-2 control-label" for="textinput">end</label>
+            <div class="col-sm-4">
+              <input type="text" placeholder="end_day" class="form-control">
+            </div>
+          </div>
+
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">expire day</label>
+            <div class="col-sm-10">
+              <input type="text" placeholder="ad_expire_day" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="pull-right">
+                <button type="submit" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    (function($){
+      $.fn.extend({
+        morphButton: function(options) {
+
+          this.defaultOptions = {};
+          var settings = $.extend({}, this.defaultOptions, options);
+
+          return this.each(function() {
+            var $this = $(this);
+            var $button = $this.find('button.morphbutton-open');
+            var $buttonClose = $this.find('button.morphbutton-close');
+            var $content = $this.find('.morphbutton-content');
+
+            $content.css({
+              top: $this.offset().top,
+              left: $this.offset().left,
+              width: $this.css('width'),
+              height: $this.css('height')
+            });
+
+            $button.click(function(){
+
+
+              // $content.css('visibility', 'visible');
+              // $content.css({
+                //   top: '',
+                //   left: '',
+                //   width: $this.css('width'),
+                //   height: $this.css('height'),
+                //   visibility: 'hidden'
+                // });
+                // $content.css({
+                  //   top: $this.offset().top,
+                  //   left: $this.offset().left
+                  // //   width: $button.css('width'),
+                  // //   height: $button.css('height'),
+                  // //   display: 'block'
+                  // });
+
+                  $content.css('opacity', 1);
+
+                  $content.delay(300).queue(function(){
+                    $this.addClass('active');
+                    $(this).dequeue();
+                  }).delay(500).queue(function(){
+                    $this.addClass('open');
+                    $(this).dequeue();
+                  });
+
+                });
+
+                $buttonClose.click(function(){
+                  $this.removeClass('active');
+                  $this.removeClass('open');
+
+                  $content.delay(500).queue(function(){
+                    $content.css('opacity', 0);
+                    $(this).dequeue();
+                  });
+
+                });
+
+                //
+                //
+
+                // //Init
+                // var minW = $button.css('width');
+                // var maxW = $content.css('width');
+                // var minH = $button.css('height');
+                // var maxH = $content.css('height');
+
+                // var posY = $this.offset().top;
+                // var posX = $this.offset().left;
+
+
+                // // $this.data('width-start', $button.css('width'));
+                // // $this.data('width-finish', $content.css(
+                // // $this.data('height-start', $button.css('height'));
+                // // $this.data('height-finish', $content.css('height'));
+
+                // //Set min height/width
+                // $this.width(minW);
+                // $this.height(minH);
+
+                // console.log(minH);
+
+                // $button.click(function(){
+                  //   $button.hide();
+                  //   // $this.width(maxW);
+                  //   // $this.height(maxH);
+
+                  //   console.log(maxH);
+
+                  //   $this.css({
+                    //     width: maxW,
+                    //     height: maxH,
+                    //     top: 100,
+                    //     left: ($(window).width() / 2) - (parseInt(maxH) / 2)
+                    //   });
+                    // });
+
+                    // $buttonClose.click(function(){
+                      //   $button.show();
+
+                      //   $this.css({
+                        //     width: minW,
+                        //     height: minH,
+                        //     top: posY,
+                        //     left: posX
+                        //   });
+                        // });
+
+                        // $buttonClose.click();
+
+
+
+
+
+
+                        //console.log($this.data());
+
+
+                        //$this.data('width-start', $this.width());
+                      });
+                    }
+                  });
+                  //Auto Init
+                  $(document).ready(function(){
+                    $(".morphbutton").morphButton();
+                  });
+                }(jQuery));
+
+                // (function($){
+                  //   $.fn.extend({
+                    //       morphButton: function(options) {
+                      //           this.defaultOptions = {};
+                      //           var settings = $.extend({}, this.defaultOptions, options);
+
+                      //           return this.each(function() {
+                        //               var $this = $(this);
+                        //           });
+                        //       }
+                        //   });
+
+                        //   //Auto Init
+                        //   $(document).ready(function(){
+
+                          //     $(".morphButton").morphButton();
+                          //   });
+                          // })(jQuery);
+
+                          $(document).ready(function() {
+
+                            $.ajax({
+                              type: "GET",
+                              url:"http://211.253.28.194:30022/api/campaigns",
+                              success: function(data){
+                                var result=data.result;
+                                var campaigns = result.campaigns;
+                                for(var i=0, length = campaigns.length; i<length;i++){
+                                  var camp_id=campaigns[i].id;
+                                  var camp_desc=campaigns[i].camp_desc;
+                                  var camp_title=campaigns[i].title;
+                                  var camp_url=campaigns[i].url;
+                                  var ad_expire_day=campaigns[i].ad_expire_day;
+                                  var start_day=campaigns[i].start_day;
+                                  var end_day=campaigns[i].end_day;
+
+                                  $("#camplist").append('<li size=10><a>'+camp_desc+'</a></li>');
+                                }
+                              }
+
+
+                            });
+
+                          });
+                        </script>
+                      </body>
+                      </html>
