@@ -2,108 +2,119 @@ var express = require('express');
 var mysql = require('mysql');
 var router = express.Router();
 
-var connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'root',
-  database: 'campaigndb'
-});
+var dbModule = require('../../config/db.js');
 
 router.get('/', function (req, res, next) {
-
+  var queryCount;
   var sql = 'select * from campaign_info';
+  dbModule.withConnection(dbModule.pool, function(connection, next){
+    connection.query(sql, null, function (err, rows) {
+      if (err) {
+        return next(err);
+      }
 
-  campaignQuery = connection.query(sql, null, function (err, rows) {
-    if (err) {
-      console.error(err);
-      //throw err; //처리가 필요함.
+      if (Array.isArray(rows)) {
+        queryCount = rows.length;
+      } else if (rows) {
+        queryCount = 1;
+      } else {
+        queryCount = 0;
+      }
+      return next(err,rows,queryCount);
+    });
+  },function(err,message){
+    if(err){
       res.status(400).json({
         'code': -1,
         'msg': 'query error',
         'result': err
       });
-      return;
-    }
+    }else{
+      var rows = arguments[1];
+      var count = arguments[2];
 
-    if (Array.isArray(rows)) {
-      queryCount = rows.length;
-    } else if (rows) {
-      queryCount = 1;
-    } else {
-      queryCount = 0;
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': {
+          'count': count,
+          'campaigns': rows
+        }
+      });
     }
-
-    res.status(200).json({
-      'code': 0,
-      'msg': 'suc',
-      'result': {
-        'count': queryCount,
-        'campaigns': rows
-      }
-    });
   });
 });
 
 router.get('/:campaignid', function (req, res, next) {
-  let campaignId = req.params.campaignid;
+  var campaignId = req.params.campaignid;
 
   var sql = 'select * from campaign_info where id = ?';
+  dbModule.withConnection(dbModule.pool, function(connection, next){
+    connection.query(sql, [campaignId], function (err, rows) {
+      if (err) {
+       return next(err);
+     }
 
-  campaignQuery = connection.query(sql, [campaignId], function (err, rows) {
-    if (err) {
-      console.error(err);
-      //throw err; //처리가 필요함.
+     return next(err, rows);
+   });
+  },function(err){
+    var rows = arguments[1];
+
+    if(err){
       res.status(400).json({
         'code': -1,
         'msg': 'query error',
         'result': err
       });
-      return;
-    }
-
-    if (rows == 0) {
-      res.status(400).json({
-        'code': -6,
-        'msg': 'noting to get'
-      });
-    } else {
-      res.status(200).json({
-        'code': 0,
-        'msg': 'suc',
-        'result': rows[0]
-      });
+    }else{
+      if (rows == 0) {
+        res.status(400).json({
+          'code': -6,
+          'msg': 'noting to get'
+        });
+      } else {
+        res.status(200).json({
+          'code': 0,
+          'msg': 'suc',
+          'result': rows[0]
+        });
+      }
     }
   });
 });
 
 router.post('/url', function (req, res, next) {
-  let title = req.body.title;
-  let url = req.body.url;
-  let expireDay = req.body.expireDay;
-  let startDate = req.body.startDate;
-  let endDate = req.body.endDate;
+  var title = req.body.title;
+  var url = req.body.url;
+  var desc = req.body.desc;
+  var template = req.body.template;
+  var expireDay = req.body.expireDay;
+  var startDate = req.body.startDate;
+  var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-    '(title,url,ad_expire_day,start_date,end_date)' +
-    'values (?,?,?,?,?)';
-
-  var query = connection.query(sql, [title, url, expireDay, startDate, endDate], function (err, result) {
-    if (err) {
-      console.error(err);
-      //throw err; //처리가 필요함.
+  '(title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
+  'values (?,?,?,?,?,?,?)';
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      return next(err);
+    });
+  },function(err){
+    if(err){
       res.status(400).json({
         'code': -1,
         'msg': 'query error',
         'result': err
       });
-      return;
+    }else{
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
     }
-
-    res.status(200).json({
-      'code': 0,
-      'msg': 'suc'
-    });
   });
 });
 
@@ -116,148 +127,134 @@ router.post('/image', function (req, res, next) {
     });
   }
 
-  let title = req.body.title;
-  let uploadImage = req.files.uploadImage;
-  let filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
-  let url = req.protocol + '://' + req.get('host') + "/" + filePath;
-  let expireDay = req.body.expireDay;
-  let startDate = req.body.startDate;
-  let endDate = req.body.endDate;
+  var title = req.body.title;
+  var uploadImage = req.files.uploadImage;
+  var filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
+  var url = req.protocol + '://' + req.get('host') + "/" + filePath;
+  var desc = req.body.desc;
+  var template = req.body.template;
+  var expireDay = req.body.expireDay;
+  var startDate = req.body.startDate;
+  var endDate = req.body.endDate;
 
   var sql = 'insert into campaign_info ' +
-    '(title,url,ad_expire_day,start_date,end_date)' +
-    'values (?,?,?,?,?)';
-  connection.beginTransaction(function (err) {
-    if (err) {
-      console.error(err);
-      connection.rollback(function () {
-        //throw err; //처리가 필요함.
+  '(title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
+  'values (?,?,?,?,?,?)';
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+      if (err) {
+        return next(err);
         res.status(400).json({
-          'code': -4,
-          'msg': 'transaction error',
+          'code': -1,
+          'msg': 'query error',
           'result': err
         });
-        return;
-      });
-    }
-
-    var query = connection.query(sql, [title, url, expireDay, startDate, endDate], function (err, result) {
-      if (err) {
-        console.error(err);
-        connection.rollback(function () {
-          //throw err; //처리가 필요함.
-          res.status(400).json({
-            'code': -1,
-            'msg': 'query error',
-            'result': err
-          });
-          return;
-        });
       }
-
-      // Use the mv() method to place the file somewhere on your server 
-      uploadImage.mv(filePath, function (err) {
-        if (err) {
-          console.error(err);
-          connection.rollback(function () {
-            //throw err; //처리가 필요함.
-            //err code에 대한 수정 필요
-            res.status(400).json({
-              'code': -5,
-              'msg': 'upload error'
-            });
-            return;
-          });
-        }
+        // Use the mv() method to place the file somewhere on your server 
+        uploadImage.mv(filePath, function (err) {
+          if (err) {
+            return next(err);
+          }
+        });
       });
-
-      connection.commit(function (err) {
-        if (err) {
-          console.error(err);
-          connection.rollback(function () {
-            //throw err; //처리가 필요함.
-            //err code에 대한 수정 필요
-            res.status(400).json({
-              'code': -5,
-              'msg': 'upload error'
-            });
-            return;
-          });
-        }
-      });
-      res.status(200).json({
-        'code': 0,
-        'msg': 'suc'
-      });
+  },function(err){
+    res.status(200).json({
+      'code': 0,
+      'msg': 'suc'
     });
   });
 });
 
+
 router.put('/:campaignid', function (req, res, next) {
-  let campaignId = req.params.campaignid;
-  let title = req.body.title;
-  let url = req.body.url;
-  let expireDay = req.body.expireDay;
-  let startDate = req.body.startDate;
-  let endDate = req.body.endDate;
+  var campaignId = req.params.campaignid;
+  var title = req.body.title;
+  var url = req.body.url;
+  var desc = req.body.desc;
+  var template = req.body.template;
+  var expireDay = req.body.expireDay;
+  var startDate = req.body.startDate;
+  var endDate = req.body.endDate;
 
   var sql = 'update campaign_info' +
-    ' set title= ?,url=?,ad_expire_day=?,start_date=?,end_date=?' +
-    ' where id = ?';
-
-  var query = connection.query(sql, [title, url, expireDay, startDate, endDate, campaignId], function (err, result) {
-    if (err) {
-      console.error(err);
-      //throw err; //처리가 필요함.
+  ' set title= ?,camp_desc= ?,url=?,template=?,ad_expire_day=?,start_date=?,end_date=?' +
+  ' where id = ?';
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate, campaignId], function (err, result) {
+      if (err) {
+        return next(err);
+      }
+      return next(err);
+    });
+  },function(err){
+    if(err){
       res.status(400).json({
         'code': -1,
         'msg': 'query error',
         'result': err
       });
-      return;
+    }else{
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
     }
-
-    res.status(200).json({
-      'code': 0,
-      'msg': 'suc'
-    });
   });
 });
+
 
 router.delete('/:campaignid', function(req, res, next){
   // request 안에서 campaignID'들'을 가져오기
   var campid = req.params.campaignid;
   var sql = "delete from campaign_info WHERE id = ? ";
-  var query = connection.query(sql, [campid], function (err, result){
-    if (err){
-      console.log(err);
-      return;
-    }
-  
-
-    res.status(200).json({
-      'code': 0,
-      'msg': 'suc'
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query(sql, [campid], function (err, result){
+      if (err){
+        return next(err);
+      }
+      return next(err);
     });
+  },function(){
+    if(err){
+      res.status(200).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    }else{
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc'
+      });
+    }
   });
 });
 
 router.delete('/', function(req, res, next){
   var campids = req.body.campaignids;
 
-    var sql = "delete from campaign_info WHERE id in (?)";
-    var query = connection.query(sql, [campids], function (err, result){
+  var sql = "delete from campaign_info WHERE id in (?)";
+  dbModule.inTransaction(dbModule.pool, function(connection, next){
+    connection.query(sql, [campids], function (err, result){
       if (err){
         console.log(err);
         return;
       }
-
+    });
+  },function(err){
+    if(err){
+      res.status(200).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    }else{
       res.status(200).json({
         'code': 0,
         'msg': 'suc'
       });
-    });
+    }
   });
-
+});
 module.exports = router;
 

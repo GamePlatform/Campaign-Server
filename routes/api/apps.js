@@ -4,14 +4,6 @@ var router = express.Router();
 
 var dbModule = require('../../config/db.js');
 
-// var connection = mysql.createConnection({
-//   host:'localhost',
-//   port:3306,
-//   user:'root',
-//   password:'root',
-//   database:'campaigndb'
-// });
-
 router.get('/', function(req, res, next) {
   var queryCount;
   var getAllAppsQuery = 'select id, title from app_info';
@@ -38,7 +30,7 @@ router.get('/', function(req, res, next) {
     else
       res.json({
         'count':appCount,
-          apps
+        apps
       });
   });
 });
@@ -140,10 +132,10 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
     ecArr.push(parseInt(req.query.ec[i]));
   }
   var queryCount;
-  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.url, ci.ad_expire_day ' +
-          'from campaign_for_location as cl inner join location_for_app as la on cl.location_id=la.location_id ' +
-          'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
-          'where la.app_id=? and la.location_id=?';
+  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.camp_desc, ci.url, ci.template, ci.ad_expire_day ' +
+  'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
+  'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
+  'where la.app_id=? and la.location_id=?';
   dbModule.withConnection(dbModule.pool, function(connection, next){
     connection.query(campaignsJoinQuery, [appId, locationId], function(err, camRows, fields){
       if (err)
@@ -177,29 +169,64 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
     else
       res.json({
         'count':queryCount,
-          campaigns
+        campaigns
       });
   });
 });
 
 router.post('/:appid/locations/:locationid/campaigns', function(req, res){
+  console.log(req.body);
   var appId = parseInt(req.params.appid);
-  var locationId = parseInt(req.params.locationid);
+  var locationId = req.params.locationid;
   var campaigns = req.body.campaigns;
   var enrollCampaigns = [];
   var enrollCampaignsQuery;
+  var identitySql = "select seq from location_for_app where location_id=? and app_id=?";
+  var locationSeq;
+  
+  // dbModule.withConnection(dbModule.pool, function(connection, next){
+  //   connection.query(identitySql, [locationId,appId], function(err, camRow, fields){
+  //     if (err){
+  //       return next(err, 'POST campaign of location, DB insert, error');
+  //     }
+  //     return next(err,camRow);
+  //   });
+  // }, function(err, message){
+  //   if(err){
+  //     res.status(400).json({'error':message});
+  //   }else{
+      
+  //   }
+  // });
 
-  for(var i=0;i<campaigns.length;i++){
-    enrollCampaigns.push([locationId, campaigns[i].campaign_id, campaigns[i].campaign_order]);
-  }
-  enrollCampaignsQuery = 'insert into campaign_for_location (location_id, campaign_id, campaign_order) values ?';
+  
+
+  enrollCampaignsQuery = 'insert ignore into campaign_for_location (location_seq, campaign_id, campaign_order)'
+  +' values ?';
 
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(enrollCampaignsQuery, [enrollCampaigns], function(err, camRows, fields){
+    connection.query(identitySql, [locationId,appId], function(err, camRow, fields){
       if (err){
         return next(err, 'POST campaign of location, DB insert, error');
       }
-      return next(err);
+
+      if(camRow){
+        locationSeq = camRow[0].seq;
+      }else{
+        res.status(400).json({'error':'Not Found'});
+      }
+
+      for(var i=0;i<campaigns.length;i++){
+        enrollCampaigns.push([locationSeq, campaigns[i].campaign_id, campaigns[i].campaign_order]);
+        console.log(locationSeq);
+      }
+
+      connection.query(enrollCampaignsQuery, [enrollCampaigns], function(err, camRows, fields){
+        if (err){
+          return next(err, 'POST campaign of location, DB insert, error');
+        }
+        return next(err,camRows);
+      });
     });
   }, function(err, message){
     if(err)
@@ -211,15 +238,15 @@ router.post('/:appid/locations/:locationid/campaigns', function(req, res){
 
 router.delete('/:appid/locations/:locationid/campaigns', function(req, res){
   var appId = parseInt(req.params.appid);
-  var locationId = parseInt(req.params.locationid);
+  var locationSeq = req.params.locationSeq;
   var campaigns = req.body.campaigns;
   var deleteCampaigns = [];
   var deleteCampaignsQuery;
 
   for(var i=0;i<campaigns.length;i++){
-    deleteCampaigns.push([locationId, campaigns[i].campaign_id]);
+    deleteCampaigns.push([locationSeq, campaigns[i].campaign_id]);
   }
-  deleteCampaignsQuery = 'delete from campaign_for_location where (location_id, campaign_id) in (?)';
+  deleteCampaignsQuery = 'delete from campaign_for_location where (location_seq, campaign_id) in (?)';
 
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(deleteCampaignsQuery, [deleteCampaigns], function(err, appRows, fields){

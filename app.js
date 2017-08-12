@@ -11,22 +11,29 @@ var index = require('./routes/index');
 var usersApi = require('./routes/api/users');
 var campaign = require('./routes/api/campaign');
 var appsApi = require('./routes/api/apps');
+var locationsApi = require('./routes/api/locations');
+var devicesApi = require('./routes/api/devices');
 var errorUtils = require('./error');
 
-//test js
+// test js
 var errorTest = require('./routes/api/errortest');
-
 var app = express();
-
-// view test
-var viewTest = require('./routes/viewtest');
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+// view
+var viewTest = require('./routes/views/viewtest');
+var appLocation = require('./routes/views/app-location');
+var campView = require('./routes/views/campaign');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,8 +45,12 @@ app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
+app.use('/api/apps', locationsApi);
+app.use('/api/apps', devicesApi);
 app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
+app.use('/app-location', appLocation);
+app.use('/campaign', campView);
 
 // error -this must be the last position in file
 // catch 404 and forward to error handler
@@ -50,15 +61,15 @@ app.use(errorUtils.logErrors);
 app.use(errorUtils.errorHandler);
 // basic error handler
 /*
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  app.use(function(err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+  });
 */
 
 fs.mkdir("upload_images",function(e){
