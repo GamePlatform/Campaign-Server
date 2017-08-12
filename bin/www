@@ -4,30 +4,87 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+// var app = require('../app');
 var debug = require('debug')('campaign-server:server');
 var http = require('http');
+var cluster = require('cluster');
+var os = require('os');
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '30022');
-app.set('port', port);
+var server;
+cluster.schedulingPolicy = cluster.SCHED_RR;
 
-/**
- * Create HTTP server.
- */
+function startClusterMaster(){
+  console.log('Now master cluster.');
+  var cpuNumber = os.cpus().length;
 
-var server = http.createServer(app);
+  for(var i = 0; i < cpuNumber; i++){
+    cluster.fork();
+  }
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  cluster.on('fork', function(worker){
+    console.log('Worker ' + worker.process.pid + ' is forked.');
+  })
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  cluster.on('online', function(worker){
+    console.log('Worker ' + worker.process.pid + ' is online.');
+  });
+
+  cluster.on('exit', function(worker, code, signal){
+    console.log('Worker ' + worker.process.pid + ' is exit.');
+    console.log('Code: ' + code);
+
+    if(code === 200){
+      setTimeout(function(){
+        cluster.fork();
+      }, 1000);
+    }
+  });
+}
+
+function startClusterWorker(){
+  console.log('Now worker cluster.');
+
+  var app = require('../app');
+
+  app.set('port', port);
+
+  /**
+   * Create HTTP server.
+   */
+  server = http.createServer(app);
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
+
+function startCluster(){
+  return (cluster.isMaster) ? startClusterMaster() : startClusterWorker();
+}
+
+startCluster();
+
+// app.set('port', port);
+//
+// /**
+//  * Create HTTP server.
+//  */
+//
+// var server = http.createServer(app);
+//
+// /**
+//  * Listen on provided port, on all network interfaces.
+//  */
+//
+// server.listen(port);
+// server.on('error', onError);
+// server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
