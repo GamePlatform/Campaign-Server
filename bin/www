@@ -18,7 +18,7 @@ var server;
 cluster.schedulingPolicy = cluster.SCHED_RR;
 
 function startClusterMaster(){
-  console.log('[Enter Master Cluster]');
+  console.log('[Start Master Cluster]');
 
   var cpuNumber = os.cpus().length;
   var worker;
@@ -40,6 +40,9 @@ function startClusterMaster(){
 
     switch (message) {
       case 'quit':
+        shutdownServer('SIGKILL');
+        break;
+      case 'quit!':
         process.exit(0);
         break;
       case 'kill':
@@ -68,7 +71,11 @@ function startClusterMaster(){
       setTimeout(function(){
         cluster.fork();
       }, 1000);
-    }else if(code === null){
+    }
+    // else if(signal === 'SIGKILL'){
+    //
+    // }
+    else if(code === null && signal !== 'SIGKILL'){
       console.log('test kill');
       setTimeout(function(){
         cluster.fork();
@@ -79,7 +86,7 @@ function startClusterMaster(){
 }
 
 function startClusterWorker(){
-  console.log('[Enter Worker Cluster]');
+  console.log('[Start Worker Cluster]: ' + cluster.worker.process.pid);
 
   var app = require('../app');
 
@@ -111,6 +118,17 @@ function startClusterWorker(){
 function getCommand(command){
   console.log('[Command Input]: \'' + command + '\'');
   process.send(command);
+}
+
+function shutdownServer(msg){
+  console.log('[Shutdown Server]');
+  for (const id in cluster.workers){
+    if (cluster.workers.hasOwnProperty(id)){
+      worker = cluster.workers[id];
+      console.log('[Killing Worker]: ' + worker.process.pid);
+      worker.process.kill(msg);
+    }
+  }
 }
 
 function startCluster(){
