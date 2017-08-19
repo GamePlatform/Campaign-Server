@@ -59,7 +59,7 @@
                   </div>
                   <label class="col-sm-2 control-label" for="textinput">end</label>
                   <div class="col-sm-4">
-                     <input type="text" placeholder="2017-01-02 오전00:00:00 class="form-control">
+                     <input type="text" placeholder="2017-01-02 오전00:00:00 class"="form-control">
                   </div>
                </div>
 
@@ -105,24 +105,6 @@
                   });
 
                   $button.click(function(){
-
-
-                // $content.css('visibility', 'visible');
-                // $content.css({
-                //   top: '',
-                //   left: '',
-                //   width: $this.css('width'),
-                //   height: $this.css('height'),
-                //   visibility: 'hidden'
-                // });
-                // $content.css({
-                //   top: $this.offset().top,
-                //   left: $this.offset().left
-                // //   width: $button.css('width'),
-                // //   height: $button.css('height'),
-                // //   display: 'block'
-                // });
-
                 $content.css('opacity', 1);
 
                 $content.delay(300).queue(function(){
@@ -145,68 +127,6 @@
                      });
 
                   });
-
-              //
-              //
-
-              // //Init
-              // var minW = $button.css('width');
-              // var maxW = $content.css('width');
-              // var minH = $button.css('height');
-              // var maxH = $content.css('height');
-
-              // var posY = $this.offset().top;
-              // var posX = $this.offset().left;
-
-
-              // // $this.data('width-start', $button.css('width'));
-              // // $this.data('width-finish', $content.css(
-              // // $this.data('height-start', $button.css('height'));
-              // // $this.data('height-finish', $content.css('height'));
-
-              // //Set min height/width
-              // $this.width(minW);
-              // $this.height(minH);
-
-              // console.log(minH);
-
-              // $button.click(function(){
-              //   $button.hide();
-              //   // $this.width(maxW);
-              //   // $this.height(maxH);
-
-              //   console.log(maxH);
-
-              //   $this.css({
-              //     width: maxW,
-              //     height: maxH,
-              //     top: 100,
-              //     left: ($(window).width() / 2) - (parseInt(maxH) / 2)
-              //   });
-              // });
-
-              // $buttonClose.click(function(){
-              //   $button.show();
-
-              //   $this.css({
-              //     width: minW,
-              //     height: minH,
-              //     top: posY,
-              //     left: posX
-              //   });
-              // });
-
-              // $buttonClose.click();
-
-
-
-
-
-
-              //console.log($this.data());
-
-
-              //$this.data('width-start', $this.width());
           });
             }
          });
@@ -216,24 +136,6 @@
   });
 }(jQuery));
 
-// (function($){
-//   $.fn.extend({
-//       morphButton: function(options) {
-//           this.defaultOptions = {};
-//           var settings = $.extend({}, this.defaultOptions, options);
-
-//           return this.each(function() {
-//               var $this = $(this);
-//           });
-//       }
-//   });
-
-//   //Auto Init
-//   $(document).ready(function(){
-
-//     $(".morphButton").morphButton();
-//   });
-// })(jQuery);
 </script>
 </body>
 </html>
