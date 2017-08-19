@@ -51,6 +51,7 @@ app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
 app.use('/app-location', appLocation);
 app.use('/campaign', campView);
+// app.use(express.static('routes'));
 
 // error -this must be the last position in file
 // catch 404 and forward to error handler
