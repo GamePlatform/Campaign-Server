@@ -1,141 +1,188 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <meta charset="utf-8">
-   <title>1</title>
-   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-   <link href="./test.css" rel="stylesheet">
-   <script
-   src="http://code.jquery.com/jquery-1.12.4.min.js"
-   integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-   crossorigin="anonymous"></script>
-   <style type="text/css">
-      .morphbutton-content {
-         background-color: #a7ddf9;
-         color: #fff;
-      }
-   </style>
+  <meta charset="utf-8">
+  <title>1</title>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link href="../../public/stylesheets/test.css" rel="stylesheet">
+  <script
+  src="http://code.jquery.com/jquery-1.12.4.min.js"
+  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+  crossorigin="anonymous"></script>
+  <style type="text/css">
+  .morphbutton-content {
+    background-color: #a7ddf9;
+    color: #fff;
+  }
+  </style>
 </head>
 <body>
-   <div class="morphbutton">
-      <button type="button" class="btn btn-primary morphbutton-open">Open</button>
-      <div class="morphbutton-content" style="top: 234px; left: 0px; width: 60px; height: 34px; opacity: 0;">
-         <button type="button" class="morphbutton-close"><span class="glyphicon glyphicon-remove"></span></button>
-         <form class="form-horizontal" role="form">
-            <fieldset>
+  <div class="morphbutton">
+    <button type="button" class="btn btn-primary morphbutton-open">Open</button>
+    <div class="morphbutton-content" style="top: 234px; left: 0px; width: 60px; height: 34px; opacity: 0;">
+      <button type="button" class="morphbutton-close"><span class="glyphicon glyphicon-remove"></span></button>
+      <form class="form-horizontal" role="form">
+        <fieldset>
 
-               <!-- Form Name -->
-               <legend>Campaign Details</legend>
+          <!-- Form Name -->
+          <legend>Campaign Details</legend>
 
-               <!-- Text input-->
-               <div class="form-group">
-                  <label class="col-sm-2 control-label" for="textinput">desc</label>
-                  <div class="col-sm-10">
-                     <input type="text" placeholder="ad1" class="form-control">
-                  </div>
-               </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">desc</label>
+            <div class="col-sm-10">
+              <input name="camp_desc" type="text" class="form-control">
+            </div>
+          </div>
 
-               <!-- Text input-->
-               <div class="form-group">
-                  <label class="col-sm-2 control-label" for="textinput">title</label>
-                  <div class="col-sm-10">
-                     <input type="text" placeholder="n일 동안 광고 보지 않기" class="form-control">
-                  </div>
-               </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">title</label>
+            <div class="col-sm-10">
+              <input name="camp_title"type="text" class="form-control">
+            </div>
+          </div>
 
-               <!-- Text input-->
-               <div class="form-group">
-                  <label class="col-sm-2 control-label" for="textinput">url</label>
-                  <div class="col-sm-10">
-                     <input type="text" placeholder="url" class="form-control">
-                  </div>
-               </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">url</label>
+            <div class="col-sm-10">
+              <input name="camp_url" type="text" class="form-control">
+            </div>
+          </div>
 
-               <!-- Text input-->
-               <div class="form-group">
-                  <label class="col-sm-2 control-label" for="textinput">start</label>
-                  <div class="col-sm-4">
-                     <input type="text" placeholder="2017-01-01 오전00:00:00" class="form-control">
-                  </div>
-                  <label class="col-sm-2 control-label" for="textinput">end</label>
-                  <div class="col-sm-4">
-                     <input type="text" placeholder="2017-01-02 오전00:00:00 class"="form-control">
-                  </div>
-               </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">start</label>
+            <div class="col-sm-4">
+              <input name=="start_day" type="text" class="form-control">
+            </div>
+            <label class="col-sm-2 control-label" for="textinput">end</label>
+            <div class="col-sm-4">
+              <input name="end_day" type="text" class="form-control">
+            </div>
+          </div>
 
-               <!-- Text input-->
-               <div class="form-group">
-                  <label class="col-sm-2 control-label" for="textinput">expire day</label>
-                  <div class="col-sm-10">
-                     <input type="text" placeholder="n" class="form-control">
-                  </div>
-               </div>
-               <div class="form-group">
-                  <div class="col-sm-offset-2 col-sm-10">
-                     <div class="pull-right">
-                        <button type="submit" class="btn btn-default">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                     </div>
-                  </div>
-               </div>
-            </fieldset>
-         </form>
-      </div>
-   </div>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="textinput">expire day</label>
+            <div class="col-sm-10">
+              <input name="ad_expire_day" type="text"  class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="pull-right">
+                <button type="submit" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
 
-   <script type="text/javascript">
-      (function($){
-         $.fn.extend({
-            morphButton: function(options) {
+  <script type="text/javascript">
+  (function($){
+    $.fn.extend({
+      morphButton: function(options) {
 
-               this.defaultOptions = {};
-               var settings = $.extend({}, this.defaultOptions, options);
+        this.defaultOptions = {};
+        var settings = $.extend({}, this.defaultOptions, options);
 
-               return this.each(function() {
-                  var $this = $(this);
-                  var $button = $this.find('button.morphbutton-open');
-                  var $buttonClose = $this.find('button.morphbutton-close');
-                  var $content = $this.find('.morphbutton-content');
+        return this.each(function() {
+          var $this = $(this);
+          var $button = $this.find('button.morphbutton-open');
+          var $buttonClose = $this.find('button.morphbutton-close');
+          var $content = $this.find('.morphbutton-content');
 
-                  $content.css({
-                     top: $this.offset().top,
-                     left: $this.offset().left,
-                     width: $this.css('width'),
-                     height: $this.css('height')
-                  });
+          $content.css({
+            top: $this.offset().top,
+            left: $this.offset().left,
+            width: $this.css('width'),
+            height: $this.css('height')
+          });
 
-                  $button.click(function(){
-                $content.css('opacity', 1);
+          $button.click(function(){
 
-                $content.delay(300).queue(function(){
-                   $this.addClass('active');
-                   $(this).dequeue();
-                }).delay(500).queue(function(){
-                   $this.addClass('open');
-                   $(this).dequeue();
-                });
 
+            // $content.css('visibility', 'visible');
+            // $content.css({
+            //   top: '',
+            //   left: '',
+            //   width: $this.css('width'),
+            //   height: $this.css('height'),
+            //   visibility: 'hidden'
+            // });
+            // $content.css({
+            //   top: $this.offset().top,
+            //   left: $this.offset().left
+            // //   width: $button.css('width'),
+            // //   height: $button.css('height'),
+            // //   display: 'block'
+            // });
+
+            $content.css('opacity', 1);
+
+            $content.delay(300).queue(function(){
+              $this.addClass('active');
+              $(this).dequeue();
+            }).delay(500).queue(function(){
+              $this.addClass('open');
+              $(this).dequeue();
             });
 
-                  $buttonClose.click(function(){
-                     $this.removeClass('active');
-                     $this.removeClass('open');
-
-                     $content.delay(500).queue(function(){
-                        $content.css('opacity', 0);
-                        $(this).dequeue();
-                     });
-
-                  });
           });
-            }
-         });
-  //Auto Init
-  $(document).ready(function(){
-     $(".morphbutton").morphButton();
-  });
-}(jQuery));
 
-</script>
+          $buttonClose.click(function(){
+            $this.removeClass('active');
+            $this.removeClass('open');
+
+            $content.delay(500).queue(function(){
+              $content.css('opacity', 0);
+              $(this).dequeue();
+            });
+
+          });
+        });
+      }
+    });
+    //Auto Init
+    $(document).ready(function(){
+      $(".morphbutton").morphButton();
+    });
+  }(jQuery));
+
+
+  $(document).ready(function() {
+
+    $.ajax({
+      type: "GET",
+      url:"http://211.253.28.194:30022/api/campaigns/1",
+      success: function(data){
+        var campaign=data.result;
+        var camp_id=campaign.id;
+        var camp_desc=campaign.camp_desc;
+        var camp_title=campaign.title;
+        var camp_url=campaign.url;
+        var ad_expire_day=campaign.ad_expire_day;
+        var start_day=campaign.start_day;
+        var end_day=campaign.end_day;
+
+        $("input[name='camp_desc']").val(camp_desc);
+        $("input[name='camp_title']").val(camp_title);
+        $("input[name='camp_url']").val(camp_url);
+        $("input[name='ad_expire_day']").val(ad_expire_day);
+        $("input[name='start_day']").val(start_day);
+        $("input[name='end_day']").val(end_day);
+
+      }
+
+
+    });
+
+  });
+  </script>
 </body>
 </html>
