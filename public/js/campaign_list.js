@@ -1,6 +1,11 @@
 $(document).ready(function() {
  var camplist=$("ol#camplist");
 
+ $(".datepicker").val(getTimeStamp(new Date()));
+ $(".datepicker").datetimepicker({
+     format: 'yyyy-mm-dd hh:ii:ss'
+ });
+
   $.ajax({
     type: "GET",
     url:"http://211.253.28.194:30022/api/campaigns",
@@ -27,6 +32,28 @@ camplist.on("click","a",function(){
 
 });
 
+function getTimeStamp(d) {
+    // var d = new Date();
+    var s =
+        leadingZeros(d.getFullYear(), 4) + '-' +
+        leadingZeros(d.getMonth() + 1, 2) + '-' +
+        leadingZeros(d.getDate(), 2) + ' ' +
+        leadingZeros(d.getHours(), 2) + ':' +
+        leadingZeros(d.getMinutes(), 2) + ':' +
+        leadingZeros(d.getSeconds(), 2);
+    return s;
+}
+
+function leadingZeros(n, digits) {
+    var zero = '';
+    n = n.toString();
+    if (n.length < digits) {
+        for (i = 0; i < digits - n.length; i++)
+            zero += '0';
+    }
+    return zero + n;
+}
+
 function getCampaignInfo(id){
   $.ajax({
     type: "GET",
@@ -38,15 +65,15 @@ function getCampaignInfo(id){
       var camp_title=campaign.title;
       var camp_url=campaign.url;
       var ad_expire_day=campaign.ad_expire_day;
-      var start_day=campaign.start_day;
-      var end_day=campaign.end_day;
+      var start_date=campaign.start_date;
+      var end_date=campaign.end_date;
 
       $("input[name='camp_desc']").val(camp_desc);
       $("input[name='camp_title']").val(camp_title);
       $("input[name='camp_url']").val(camp_url);
       $("input[name='ad_expire_day']").val(ad_expire_day);
-      $("input[name='start_day']").val(start_day);
-      $("input[name='end_day']").val(end_day);
+      $("input[name='start_date']").val(getTimeStamp(new Date(start_date)));
+      $("input[name='end_date']").val(getTimeStamp(new Date(end_date)));
 
 
     }
