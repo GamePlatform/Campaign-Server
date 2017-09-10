@@ -95,14 +95,15 @@ router.post('/url', function (req, res, next) {
   var ratio_y = req.body.ratio_y;
   var is_url = req.body.is_url;
   var redirect_location = req.body.redirect_location;
+  var writer = req.body.writer;
 
   // console.log('mhg',ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate);
 
   var sql = 'insert into campaign_info ' +
-  '(ratio,is_url,redirect_location,title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
-  'values (POINT(?,?),?,?,?,?,?,?,?,?,?)';
+  '(writer,ratio,is_url,redirect_location,title,url,camp_desc,template,ad_expire_day,start_date,end_date)' +
+  'values (?,POINT(?,?),?,?,?,?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [writer, ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       if (err) {
         return next(err);
       }
