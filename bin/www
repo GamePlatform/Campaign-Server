@@ -4,30 +4,154 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+// var app = require('../app');
 var debug = require('debug')('campaign-server:server');
 var http = require('http');
+var cluster = require('cluster');
+var os = require('os');
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '30022');
-app.set('port', port);
+var server;
+cluster.schedulingPolicy = cluster.SCHED_RR;
 
-/**
- * Create HTTP server.
- */
+function startClusterMaster(){
+  console.log('[Start Master Cluster]');
 
-var server = http.createServer(app);
+  var cpuNumber = os.cpus().length;
+  var worker;
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+  for(var i = 0; i < cpuNumber; i++){
+    worker = cluster.fork();
+  }
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+  cluster.on('fork', function(worker){
+    console.log('[Worker Forked]: ' + worker.process.pid);
+  })
+
+  cluster.on('online', function(worker){
+    console.log('[Worker Online]: ' + worker.process.pid);
+  });
+
+  cluster.on('message', function(worker, message, handle){
+    console.log('[Worker Send Message]: '+ worker.process.pid +' \'' + message + '\'');
+
+    switch (message) {
+      case 'quit':
+        shutdownServer('SIGKILL');
+        break;
+      case 'quit!':
+        process.exit(0);
+        break;
+      case 'kill':
+        worker.kill();
+        break;
+      case 'list':
+        for(const id in cluster.workers){
+          console.log(cluster.workers[id].process.pid);
+        }
+        break;
+      case 'detail':
+        for(const id in cluster.workers){
+          console.log(cluster.workers[id]);
+        }
+        break;
+      default:
+        break;
+    }
+  });
+
+  cluster.on('exit', function(worker, code, signal){
+    console.log('[Worker Exit]: ' + worker.process.pid);
+    console.log('[Kill Status Code]: ' + code);
+
+    if(code === 200){
+      setTimeout(function(){
+        cluster.fork();
+      }, 1000);
+    }
+    // else if(signal === 'SIGKILL'){
+    //
+    // }
+    else if(code === null && signal !== 'SIGKILL'){
+      console.log('test kill');
+      setTimeout(function(){
+        cluster.fork();
+        console.log('[Number of Workers]:' + Object.keys(cluster.workers).length);
+      }, 1000);
+    }
+  });
+}
+
+function startClusterWorker(){
+  console.log('[Start Worker Cluster]: ' + cluster.worker.process.pid);
+
+  var app = require('../app');
+
+  app.set('port', port);
+  server = http.createServer(app);
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+
+  process.stdin.resume();
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', function (command)
+  {
+      var i;
+      // 끝부분의 newline character들을 없앤다.
+      for (i = command.length - 1;
+           (i >= 0) && ((command.charAt(i) === '\r') || (command.charAt(i) === '\n'));
+           i--);
+      if (i >= 0)
+          command = command.substring(0, i + 1);
+      getCommand(command);
+  });
+
+  process.on('message', function(message){
+    console.log('[Master Send Message]: \'' + message + '\'');
+  });
+}
+
+function getCommand(command){
+  console.log('[Command Input]: \'' + command + '\'');
+  process.send(command);
+}
+
+function shutdownServer(msg){
+  console.log('[Shutdown Server]');
+  for (const id in cluster.workers){
+    if (cluster.workers.hasOwnProperty(id)){
+      worker = cluster.workers[id];
+      console.log('[Killing Worker]: ' + worker.process.pid);
+      worker.process.kill(msg);
+    }
+  }
+}
+
+function startCluster(){
+  return (cluster.isMaster) ? startClusterMaster() : startClusterWorker();
+}
+
+startCluster();
+
+// app.set('port', port);
+//
+// /**
+//  * Create HTTP server.
+//  */
+//
+// var server = http.createServer(app);
+//
+// /**
+//  * Listen on provided port, on all network interfaces.
+//  */
+//
+// server.listen(port);
+// server.on('error', onError);
+// server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
