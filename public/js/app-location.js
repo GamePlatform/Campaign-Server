@@ -208,10 +208,12 @@ $(document).ready(function(){
 
 	var locationSeq;
   
+  	var highlightLocation = null;
+
 	locationList.on("click","a",function(e){
 		var divParent=$(this).closest('div');
-		if(highlightLocation!=null){
-			highlightLocation.removeClass('highlight');
+		if(highlightLocation != null){
+			divParent.removeClass('highlight');
 		}
 		highlightLocation=divParent.addClass('highlight');
 
