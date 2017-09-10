@@ -5,12 +5,12 @@ var router = express.Router();
 var dbModule = require('../../config/db.js');
 
 
-router.get('/:campaignid/click', function (req, res) {
+router.get('/:campaignid/report', function (req, res) {
   var getRows;
   dbModule.withConnection(dbModule.pool, function (connection, next) {
-    connection.query('select * from campaign_click where campaign_id=?', [req.params.campaignid], function (err, rows) {
+    connection.query('select * from campaign_report where campaign_id=?', [req.params.campaignid], function (err, rows) {
       if (err) {
-        return next(err, 'GET click, api/campaigns/:campaignid/click DB select error.');
+        return next(err, 'GET report, api/campaigns/:campaignid/report DB select error.');
       }
       getRows = rows;
       return next(err);
@@ -28,15 +28,16 @@ router.get('/:campaignid/click', function (req, res) {
   });
 });
 
-router.get('/:campaignid/click/:clickType', function (req, res) {
+router.get('/:campaignid/report/:clickType', function (req, res) {
   var clickType = req.params.clickType;
   clickType = Number(clickType);
   clickType = !isNaN(clickType) && clickType>0 ? clickType : req.params.clickType;
   var getRows;
+  
   dbModule.withConnection(dbModule.pool, function (connection, next) {
     connection.query('select * from campaign_click where campaign_id=? and type=?', [req.params.campaignid, clickType], function (err, rows) {
       if (err) {
-        return next(err, 'GET click, api/campaigns/:campaignid/click DB select error.');
+        return next(err, 'GET report, api/campaigns/:campaignid/report/:clickType DB select error.');
       }
       getRows = rows;
       return next(err);
@@ -54,15 +55,15 @@ router.get('/:campaignid/click/:clickType', function (req, res) {
   });
 });
 
-router.post('/:campaignid/click', function (req, res) {
+router.post('/:campaignid/report', function (req, res) {
   var clickType = req.body.clickType;
   clickType = Number(clickType);
   clickType = !isNaN(clickType) && clickType>0 ? clickType : req.body.clickType;
   var getRows;
-  dbModule.withConnection(dbModule.pool, function (connection, next) {
-    connection.query('select number from campaign_click where campaign_id=? and device_id=? and type=?', [req.params.campaignid, req.body.deviceid, clickType], function (err, rows) {
+  dbModule.inTransaction(dbModule.pool, function (connection, next) {
+    connection.query('select number from campaign_report where campaign_id=? and device_id=? and type=?', [req.params.campaignid, req.body.deviceid, clickType], function (err, rows) {
       if (err) {
-        return next(err, 'GET click, api/campaigns/:campaignid/click DB select error.');
+        return next(err, 'GET report, api/campaigns/:campaignid/report DB select error.');
       }
       getRows = rows;
       return next(err);
@@ -74,16 +75,16 @@ router.post('/:campaignid/click', function (req, res) {
       var numbers = 1;
       var sql;
       if (getRows.length) {
-        sql = 'update campaign_click SET number = ? where campaign_id=? and device_id=? and type=?';
+        sql = 'update campaign_report SET number = ? where campaign_id=? and device_id=? and type=?';
         numbers += getRows[0].number;
       } else {
-        sql = 'insert into campaign_click (number, campaign_id, device_id, type) values (?, ?, ?, ?)';
+        sql = 'insert into campaign_report (number, campaign_id, device_id, type) values (?, ?, ?, ?)';
       }
 
-      dbModule.inTransaction(dbModule.pool, function (connection, next) {
+      dbModule.withConnection(dbModule.pool, function (connection, next) {
         connection.query(sql, [numbers, req.params.campaignid, req.body.deviceid, clickType], function (err, rows) {
           if (err) {
-            return next(err, 'POST click, api/campaigns/:campaignid/click, DB insert, error');
+            return next(err, 'POST report, api/campaigns/:campaignid/report, DB insert, error');
           }
           return next(err);
         });
