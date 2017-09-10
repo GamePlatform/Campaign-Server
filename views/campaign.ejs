@@ -83,7 +83,7 @@
                     <input type="text" class="form-control" id="ad_expire_day_title" name="title" placeholder="7일 광고 그만 보기">
                 </div>
                 <div class="dropdown">
-                    <input id="expireDay" name="expireDay" hidden>
+                    <input name="ad_expire_day" hidden>
                     <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                         <div class="btn btn-primary" id="ad_expire_day">그만 보기 날짜를 선택해주세요.</div><span class="caret"></span>
                     </div>
@@ -108,7 +108,7 @@
                 <br><br>
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="exampleInputEmail1">노출 선택</label>
+                        <label>노출 선택</label>
                     </div>
                     <div class="col-md-6">
                         <input type="radio" name="urlType" value="image">이미지
@@ -126,6 +126,32 @@
                         <input type="text" class="form-control" id="urlTypeurlInput" name="url">
                     </div>
                 </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>선택시 이동경로</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="radio" name="locationType" value=0>게임 내 이동
+                        <input type="radio" name="locationType" value=1>url
+                    </div>
+                </div>
+                <br>
+                <div class="form-group" id="redirect_location_div">
+                    <label for="redirect_location">redirect_location</label>
+                    <input type="text" class="form-control" id="redirect_location" name="redirect_location" placeholder="물약 상점">
+                </div>
+                <div class="dropdown">
+                    <input name="ratio" hidden>
+                    <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                        <div class="btn btn-primary" id="ratio">창크기를 선택해주세요.</div><span class="caret"></span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="ratio">전체화면</a></li>
+                        <li><a class="ratio">500x500</a></li>
+                    </ul>
+                </div>
+                <br>
                 <div>시작날짜 : <input type="text" class="datepicker" name="startDate"></div>
                 <div>끝날짜 : <input type="text" class="datepicker" name="endDate"></div>
                 <br><br>

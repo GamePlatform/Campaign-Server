@@ -27,7 +27,6 @@ $(document).ready(function () {
         hideExclude(urlType, $(this).val());
     });
 
-
     $(".datepicker").val(getTimeStamp(new Date()));
     $(".datepicker").datetimepicker({
         format: 'yyyy-mm-dd hh:ii:ss'
@@ -45,7 +44,7 @@ $(document).ready(function () {
 
     $(".ad_expire_day").click(function (event) {
         $("#ad_expire_day").html($(this).context.innerHTML);
-        $("#expireDay").val($(this).context.innerHTML);
+        $("input[name=ad_expire_day]").val($(this).context.innerHTML);
     });
 
     $('#ad_expire_day_title').change(function (event) {
@@ -62,13 +61,30 @@ $(document).ready(function () {
         }, this);
     });
 
-    $("#submit").click(function (event) {
+    $(".ratio").click(function (event) {
+        $("#ratio").html($(this).context.innerHTML);
+        $("input[name=ratio]").val($(this).parents("li").index());
+    });
 
+    $("#submit").click(function (event) {
+        var ratioArr = [
+            [0, 0],
+            [500, 500]
+        ];
+        var ratio = ratioArr[$("input[name=ratio]").val()];
+        if ((ratio == null) || (typeof ratio == 'undefined')) {
+            alert('창 크기를 선택해주세요.');
+            return;
+        }
         var param = {
             'template': $("input[name=template]:checked").val(),
+            'ratio_x': ratio[0],
+            'ratio_y': ratio[1],
+            'is_url': $("input[name=locationType]:checked").val(),
+            'redirect_location': $("input[name=redirect_location]").val(),
             'title': $("input[name=title]").val(),
             'desc': $("input[name=desc]").val(),
-            'expireDay': $("input[name=expireDay]").val(),
+            'expireDay': $("input[name=ad_expire_day]").val(),
             'urlType': $("input[name=urlType]:checked").val(),
             'url': $("input[name=url]").val(),
             'startDate': $("input[name=startDate]").val(),
@@ -76,7 +92,9 @@ $(document).ready(function () {
         };
 
         for (var key in param) {
-            if (!param[key].length) {
+            if ((param[key] == null) ||
+                (typeof param[key] == 'undefined') ||
+                (typeof param[key] == "string" && !param[key].length)) {
                 alert(key + '항목을 입력해주세요.');
                 return;
             }
