@@ -4,6 +4,35 @@ var router = express.Router();
 
 var dbModule = require('../../config/db.js');
 
+router.get('/size', function (req, res, next) {
+  var sql = 'select count(id) as camp_size from campaign_info';
+  dbModule.withConnection(dbModule.pool, function(connection, next){
+    connection.query(sql, null, function (err, rows) {
+      if (err) {
+        return next(err);
+      }
+
+      return next(err,rows);
+    });
+  },function(err,message){
+    if(err){
+      res.status(400).json({
+        'code': -1,
+        'msg': 'query error',
+        'result': err
+      });
+    }else{
+      var rows = arguments[1];
+
+      res.status(200).json({
+        'code': 0,
+        'msg': 'suc',
+        'result': rows[0]
+      });
+    }
+  });
+});
+
 router.get('/', function (req, res, next) {
   var queryCount;
   var sql = 'select * from campaign_info';
@@ -150,7 +179,7 @@ router.post('/image', function (req, res, next) {
           'result': err
         });
       }
-        // Use the mv() method to place the file somewhere on your server 
+        // Use the mv() method to place the file somewhere on your server
         uploadImage.mv(filePath, function (err) {
           if (err) {
             return next(err);
@@ -257,4 +286,3 @@ router.delete('/', function(req, res, next){
   });
 });
 module.exports = router;
-

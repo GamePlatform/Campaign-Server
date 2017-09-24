@@ -1,57 +1,75 @@
 $(document).ready(function() {
- var camplist=$("ol#camplist");
+  var camplist=$("ol#camplist");
 
- $(".datepicker").val(getTimeStamp(new Date()));
- $(".datepicker").datetimepicker({
-     format: 'yyyy-mm-dd hh:ii:ss'
- });
+  $(".datepicker").val(getTimeStamp(new Date()));
+  $(".datepicker").datetimepicker({
+    format: 'yyyy-mm-dd hh:ii:ss'
+  });
 
+  var camp_size;
+  var pages;
   $.ajax({
     type: "GET",
-    url:"http://211.253.28.194:30022/api/campaigns",
+    url:"http://211.253.28.194:30022/api/campaigns/size",
     success: function(data){
-      var result=data.result;
-      var campaigns = result.campaigns;
-      for(var i=0, length = campaigns.length; i<length;i++){
-        var camp_id=campaigns[i].id;
-        var camp_desc=campaigns[i].camp_desc;
-        camplist.append('<li size=10><a href="#" name="'+camp_id+'">'+camp_desc+'</a></li>');
-      }
+      camp_size=data.result.camp_size;
+      pages=camp_size%20+1
+    }
+
+  });
+
+  $('#pagination-demo').twbsPagination({
+    totalPages:pages,
+    onPageClick: function (event, page) {
+      $.ajax({
+        type: "GET",
+        url:"http://211.253.28.194:30022/api/campaigns",
+        success: function(data){
+          var result=data.result;
+          var campaigns = result.campaigns;
+          for(var i=0, length = campaigns.length; i<length;i++){
+            var camp_id=campaigns[i].id;
+            var camp_desc=campaigns[i].camp_desc;
+            camplist.append('<li size=10><a href="#" name="'+camp_id+'">'+camp_desc+'</a></li>');
+          }
+        }
+      });
+
     }
   });
 
-//캠페인 클릭하면 modal 창 뜨면서 한건에 대해 값 채워넣기.
-var modalButton = $("button.morphbutton-open");
-camplist.on("click","a",function(){
-  var camp_id = $(this).attr("name");
-  modalButton.click();
-  getCampaignInfo(camp_id);
+  //캠페인 클릭하면 modal 창 뜨면서 한건에 대해 값 채워넣기.
+  var modalButton = $("button.morphbutton-open");
+  camplist.on("click","a",function(){
+    var camp_id = $(this).attr("name");
+    modalButton.click();
+    getCampaignInfo(camp_id);
 
-  return false;
-});
+    return false;
+  });
 
 });
 
 function getTimeStamp(d) {
-    // var d = new Date();
-    var s =
-        leadingZeros(d.getFullYear(), 4) + '-' +
-        leadingZeros(d.getMonth() + 1, 2) + '-' +
-        leadingZeros(d.getDate(), 2) + ' ' +
-        leadingZeros(d.getHours(), 2) + ':' +
-        leadingZeros(d.getMinutes(), 2) + ':' +
-        leadingZeros(d.getSeconds(), 2);
-    return s;
+  // var d = new Date();
+  var s =
+  leadingZeros(d.getFullYear(), 4) + '-' +
+  leadingZeros(d.getMonth() + 1, 2) + '-' +
+  leadingZeros(d.getDate(), 2) + ' ' +
+  leadingZeros(d.getHours(), 2) + ':' +
+  leadingZeros(d.getMinutes(), 2) + ':' +
+  leadingZeros(d.getSeconds(), 2);
+  return s;
 }
 
 function leadingZeros(n, digits) {
-    var zero = '';
-    n = n.toString();
-    if (n.length < digits) {
-        for (i = 0; i < digits - n.length; i++)
-            zero += '0';
-    }
-    return zero + n;
+  var zero = '';
+  n = n.toString();
+  if (n.length < digits) {
+    for (i = 0; i < digits - n.length; i++)
+    zero += '0';
+  }
+  return zero + n;
 }
 
 function getCampaignInfo(id){
@@ -88,7 +106,6 @@ function getCampaignInfo(id){
 
       this.defaultOptions = {};
       var settings = $.extend({}, this.defaultOptions, options);
-
       return this.each(function() {
         var $this = $(this);
         var $button = $this.find('button.morphbutton-open');
