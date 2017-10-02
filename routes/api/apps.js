@@ -141,7 +141,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
     ecArr.push(parseInt(req.query.ec[i]));
   }
   var queryCount;
-  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.camp_desc, ci.url, ci.template, ci.ad_expire_day ' +
+  var campaignsJoinQuery = 'select *' +
   'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
   'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
   'where la.app_id=? and la.location_id=?';

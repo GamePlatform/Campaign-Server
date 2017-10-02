@@ -13,7 +13,7 @@ var campaign = require('./routes/api/campaign');
 var appsApi = require('./routes/api/apps');
 var locationsApi = require('./routes/api/locations');
 var devicesApi = require('./routes/api/devices');
-var reportApi = require('./routes/api/report');
+var analyticsApi = require('./routes/api/analytics');
 var errorUtils = require('./error');
 
 // test js
@@ -46,10 +46,10 @@ app.use(fileUpload());
 app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
-app.use('/api/campaigns', reportApi);
 app.use('/api/apps', appsApi);
 app.use('/api/apps', locationsApi);
 app.use('/api/apps', devicesApi);
+app.use('/api/apps', analyticsApi);
 app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
 app.use('/app-location', appLocation);
