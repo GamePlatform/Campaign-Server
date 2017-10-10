@@ -181,11 +181,10 @@ router.post('/:appid/analytics', function (req, res) {
   var selectDeviceSeqSql = 'select device_seq from device_info where id=?';
   var insertDeviceIDSql = 'insert into device_info (id) values (?)';
 
-  var selectAnalyticsSql = 'select number from campaign_analytics \
+  var selectAnalyticsSql = 'select campaign_id, type+0, number from campaign_analytics \
   where campaign_id IN (?) and type IN (?) and app_id IN (?) and device_seq IN (?)';
-
   var insertAnalyticsSql = 'insert into campaign_analytics \
-    (campaign_id, type, app_id, device_seq, number) values(?)\
+    (campaign_id, type, app_id, device_seq, number) values ? \
     ON DUPLICATE KEY UPDATE campaign_id=VALUES(campaign_id), \
     type=VALUES(type), app_id=VALUES(app_id), device_seq=VALUES(device_seq), number=VALUES(number)';
 
@@ -222,7 +221,6 @@ router.post('/:appid/analytics', function (req, res) {
             insertValues.push([tempCampaignID, tempType, appID, deviceSeq, 1]);
           }
         }
-        console.log('insertValues', insertValues);
 
         for (var i = 0; i < insertValues.length; i++) {
           campaignIDArr.push(insertValues[i][0]);
@@ -231,26 +229,27 @@ router.post('/:appid/analytics', function (req, res) {
           deviceSeqArr.push(deviceSeq);
         }
 
-        console.log(campaignIDArr, typeArr, appIDArr, deviceSeqArr);
-
         connection.query(selectAnalyticsSql, [campaignIDArr, typeArr, appIDArr, deviceSeqArr],
           function (selectAnalyticsErr, selectAnalyticsRows) {
             if (selectAnalyticsErr) {
-              console.log('1', selectAnalyticsErr);
               return next(selectAnalyticsErr, 'post analytics, api/apps/:appid/analytics campaign_analytics select error.');
             }
-            //모든 row가 존재하는건 아닐경우 가져온 number가 어떤 row의 number 인지 모름.. ??
-            console.log('2', selectAnalyticsRows)
-            connection.query(insertAnalyticsSql, insertValues, function (insertAnalyticsErr, insertAnalyticsRows) {
+
+            for (var i = 0; i < selectAnalyticsRows.length; i++) {
+              for (var j = 0; j < insertValues.length; j++) {
+                if (insertValues[j][0] == selectAnalyticsRows[i]['campaign_id'] 
+                && insertValues[j][1] == selectAnalyticsRows[i]['type+0']) {
+                  insertValues[j][4] += selectAnalyticsRows[i]['number'];
+                }
+              }
+            }
+
+            connection.query(insertAnalyticsSql, [insertValues], function (insertAnalyticsErr, insertAnalyticsRows) {
               if (insertAnalyticsErr) {
-                //Connection already released ??
-                console.log('3', insertAnalyticsErr);
                 return next(insertAnalyticsErr, 'post analytics, api/apps/:appid/analytics campaign_analytics insert error.');
               }
-              console.log('4', insertAnalyticsRows);
               return next(null, null);
             });
-            return next(null, null);
           });
       });
     });
