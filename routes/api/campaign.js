@@ -157,7 +157,7 @@ router.post('/image', function (req, res, next) {
   var sql = 'insert into campaign_info ' +
   '(writer,ratio,is_url,redirect_location,title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
   'values (?,POINT(?,?),?,?,?,?,?,?,?,?,?)';
-  
+
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(sql, [writer, ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       console.log(result);

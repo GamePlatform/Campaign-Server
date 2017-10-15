@@ -3,9 +3,8 @@ $(document).ready(function(){
 	var apps = $('div#apps');
 	var locations = $('div#locations');
 	var campaigns = $('div#campaigns');
-	var appAddBtn = $('button#app-add-btn');
+
 	var appDelBtn = $('button#app-del-btn');
-	var locationAddBtn = $('button#location-add-btn');
 	var locationDelBtn = $('button#location-del-btn');
 	var campaignAddBtn = $('button#campaign-add-btn');
 	var campaignDelBtn = $('button#campaign-del-btn');
@@ -36,25 +35,9 @@ $(document).ready(function(){
 	// var campaignTitle = $('#campaign-title');
 	var checkDelModal = 'delModal';
 
-	appAddBtn.on('click',function(e){
-		if(appModal.hasClass("hidden")){
-			appModal.show();
-			appModal.removeClass("hidden");
-		}else{
-			appModal.hide();
-			appModal.addClass("hidden");
-		}
-	});
 	appDelBtn.on('click',function(e){
-		if(appDelModal.hasClass("hidden")){
-			appListDelModal.empty();
-			getAppList(checkDelModal);
-			appDelModal.show();
-			appDelModal.removeClass("hidden");
-		}else{
-			appDelModal.hide();
-			appDelModal.addClass("hidden");
-		}
+		appListDelModal.empty();
+		getAppList(checkDelModal);
 	});
 	// init app-info
 	getAppList();
@@ -119,41 +102,25 @@ $(document).ready(function(){
 		delAppIdList.push({"id": $(this).attr("name")});
 	});
 
-	$("input[name='cancel']").on("click",function(e){
-		appModal.hide();
-		appDelModal.hide();
-		locationModal.hide();
-		locationDelModal.hide();
-		campaignModal.hide();
-		campaignDelModal.hide();
+	// $("input[name='cancel']").on("click",function(e){
+	// 	appModal.hide();
+	// 	appDelModal.hide();
+	// 	locationModal.hide();
+	// 	locationDelModal.hide();
+	// 	campaignModal.hide();
+	// 	campaignDelModal.hide();
 
-		appModal.addClass("hidden");
-		appDelModal.addClass("hidden");
-		locationModal.addClass("hidden");
-		locationDelModal.addClass("hidden");
-		campaignModal.addClass("hidden");
-		campaignDelModal.addClass("hidden");
-	});
+	// 	appModal.addClass("hidden");
+	// 	appDelModal.addClass("hidden");
+	// 	locationModal.addClass("hidden");
+	// 	locationDelModal.addClass("hidden");
+	// 	campaignModal.addClass("hidden");
+	// 	campaignDelModal.addClass("hidden");
+	// });
 
-	locationAddBtn.on('click',function(e){
-		if(locationModal.hasClass("hidden")){
-			locationModal.show();
-			locationModal.removeClass("hidden");
-		}else{
-			locationModal.hide();
-			locationModal.addClass("hidden");
-		}
-	});
 	locationDelBtn.on('click',function(e){
-		if(locationDelModal.hasClass("hidden")){
-			locationListDelModal.empty();
-			getLocationList(appId, checkDelModal);
-			locationDelModal.show();
-			locationDelModal.removeClass("hidden");
-		}else{
-			locationDelModal.hide();
-			locationDelModal.addClass("hidden");
-		}
+		locationListDelModal.empty();
+		getLocationList(appId, checkDelModal);
 	});
 
 	locationModal.on("click","input[name='ok']",function(e){
@@ -232,26 +199,12 @@ $(document).ready(function(){
 
 
 	campaignAddBtn.on('click',function(e){
-		if(campaignModal.hasClass("hidden")){
-			modalCampaignList.empty();
-			getCampaignList();
-			campaignModal.show();
-			campaignModal.removeClass("hidden");
-		}else{
-			campaignModal.hide();
-			campaignModal.addClass("hidden");
-		}
+		modalCampaignList.empty();
+		getCampaignList();
 	});
 	campaignDelBtn.on('click',function(e){
-		if(campaignModal.hasClass("hidden")){
-			campaignListDelModal.empty();
-			getCampaignListForLocation(appId, locationSelectIdValue, checkDelModal);
-			campaignDelModal.show();
-			campaignDelModal.removeClass("hidden");
-		}else{
-			campaignDelModal.hide();
-			campaignDelModal.addClass("hidden");
-		}
+		campaignListDelModal.empty();
+		getCampaignListForLocation(appId, locationSelectIdValue, checkDelModal);
 	});
 
 	

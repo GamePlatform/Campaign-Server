@@ -5,8 +5,8 @@
 				<h4>APP</h4>
 				<div id="apps">
 					<div align="right">
-						<button id="app-add-btn" type="button" class="btn btn-info" >add</button>
-						<button id="app-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+						<button id="app-add-btn" type="button" class="btn btn-info" data-toggle="modal" data-target="#app_modal">add</button>
+						<button id="app-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e" data-toggle="modal" data-target="#app_del_modal">delete</button>
 					</div>
 					<div class="rectangle-list">
 						<ol id="app-list">
@@ -21,8 +21,8 @@
 				<h4>Location</h4>
 				<div id="locations">
 					<div align="right">
-						<button id="location-add-btn" type="button" class="btn btn-info" >add</button>
-						<button id="location-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+						<button id="location-add-btn" type="button" class="btn btn-info" data-toggle="modal" data-target="#location_modal">add</button>
+						<button id="location-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e" data-toggle="modal" data-target="#location_del_modal" >delete</button>
 					</div>
 					<div class="rectangle-list">
 						<ol id="location-list">
@@ -37,8 +37,8 @@
 				<h4>Campaign</h4>
 				<div id="campaigns">
 					<div align="right">
-						<button id="campaign-add-btn" type="button" class="btn btn-info" >add</button>
-						<button id="campaign-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e">delete</button>
+						<button id="campaign-add-btn" type="button" class="btn btn-info" data-toggle="modal" data-target="#campaign_modal">add</button>
+						<button id="campaign-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e" data-toggle="modal" data-target="#location_del_modal" >delete</button>
 					</div>
 					<div class="rectangle-list">
 						<ol id="campaign-list">
@@ -49,93 +49,112 @@
 		</div>
 	</div>
 </div>
-<div id="app_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
+<div id="app_modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<form>
-				<div>
-					앱 이름: <input id="app-title" type="text">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">App Info RegistForm</h4>
 				</div>
-				<div>
+				<div class="modal-body">
+					<span>App Title</span> :<input id="app-title" type="text">
+				</div>
+				<div class="modal-footer">
 					<input name="ok" class="btn btn-default" value="등록">
-					<input name="cancel" type="reset" value="취소">
+					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-<div id="app_del_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
+<div id="app_del_modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<form>
 				<div class="container-fluid">
-					<div>
-						Delete Apps
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Delete App</h4>
 					</div>
-					<div class="rows">
-						<ol id="del-modal-app-list" class="rounded-list">
-						</ol>
+					<div class="modal-body">
+						<div>App List</div>
+						<div>
+							<ol id="del-modal-app-list" class="rounded-list">
+							</ol>
+						</div>
 					</div>
-					<div>
-						<input name="ok" class="btn btn-default" value="확인">
-						<input name="cancel" type="reset" value="취소">
+					<div class="modal-footer">
+						<input name="ok" class="btn btn-default" value="삭제">
+						<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-<div id="location_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
+<div id="location_modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<form>
-				<div>
-					Location ID: <input id="location-id" type="text">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Location Info RegistForm</h4>
 				</div>
-				<div>
-					Location DESC: <input id="location-desc" type="text">
+				<div class="modal-body">
+					<div>
+						<span>Location ID</span>: <input id="location-id" type="text">
+					</div>
+					<div>
+						<span>Location DESC</span>: <input id="location-desc" type="text">
+					</div>
 				</div>
-				<div>
+				<div class="modal-footer">
 					<input name="ok" class="btn btn-default" value="등록">
-					<input name="cancel" type="reset" value="취소">
+					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-<div id="location_del_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
+<div id="location_del_modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
 		<div class="modal-content">
 			<form>
 				<div class="container-fluid">
-					<div>
-						Delete Locations
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Delete Location</h4>
 					</div>
-					<div class="rows">
-						<ol id="del-modal-location-list" class="rounded-list">
+					<div class="modal-body">
+						<div>Location List</div>
+						<div>
+							<ol id="del-modal-location-list" class="rounded-list">
 						</ol>
+						</div>
 					</div>
-					<div>
-						<input name="ok" class="btn btn-default" value="확인">
-						<input name="cancel" type="reset" value="취소">
+					<div class="modal-footer">
+						<input name="ok" class="btn btn-default" value="삭제">
+						<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-<div id="campaign_modal" class="hidden">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content" style="width:400px">
+<div id="campaign_modal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
 			<form>
-				<div class="container-fluid">
-					<div>
-						Campaign List
-					</div>
-					<div class="row">
-						<input name="ok" class="btn btn-default" value="등록">
-						<input name="cancel" type="reset" value="취소">
-					</div>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Campaign Connection Form</h4>
+				</div>
+				<div class="modal-body">
+					<input name="ok" class="btn btn-default" value="등록">
+					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
+				</div>
+				<div class="modal-footer">
 					<div class="rows rectangle-list" style="float:left; position:block;">
 						<ol id="modal-campaign-list" class="connectedSortable" >
 						</ol>
@@ -149,6 +168,7 @@
 		</div>
 	</div>
 </div>
+
 <div id="campaign_del_modal" class="hidden">
 	<div class="modal-dialog modal-sm" role="document">
 		<div class="modal-content">

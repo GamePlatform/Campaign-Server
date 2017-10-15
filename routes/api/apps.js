@@ -144,7 +144,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
   var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.camp_desc, ci.url, ci.template, ci.ad_expire_day ' +
   'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
   'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
-  'where la.app_id=? and la.location_id=?';
+  'where la.app_id=? and la.location_id=? and ci.start_date < NOW() and ci.end_date > NOW()';
   dbModule.withConnection(dbModule.pool, function(connection, next){
     connection.query(campaignsJoinQuery, [appId, locationId], function(err, camRows, fields){
       if (err)
