@@ -13,6 +13,7 @@ var campaign = require('./routes/api/campaign');
 var appsApi = require('./routes/api/apps');
 var locationsApi = require('./routes/api/locations');
 var devicesApi = require('./routes/api/devices');
+var analyticsApi = require('./routes/api/analytics');
 var errorUtils = require('./error');
 
 // test js
@@ -27,6 +28,7 @@ app.use(function(req, res, next) {
 var viewTest = require('./routes/views/viewtest');
 var appLocation = require('./routes/views/app-location');
 var campView = require('./routes/views/campaign');
+var campList = require('./routes/views/campaign_list');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -47,12 +49,14 @@ app.use('/api/campaigns', campaign);
 app.use('/api/apps', appsApi);
 app.use('/api/apps', locationsApi);
 app.use('/api/apps', devicesApi);
+app.use('/api/apps', analyticsApi);
 app.use('/error/test', errorTest);
 app.use('/view/test', viewTest);
 app.use('/app-location', appLocation);
 app.use('/campaign', campView);
-// app.use(express.static('routes'));
+app.use('/campaign-list', campList);
 
+// app.use(express.static('routes'));
 // error -this must be the last position in file
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

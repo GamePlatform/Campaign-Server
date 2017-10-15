@@ -5,9 +5,10 @@ var router = express.Router();
 var dbModule = require('../../config/db.js');
 
 router.get('/', function(req, res, next) {
+  // console.log('get in');
   var queryCount;
   var getAllAppsQuery = 'select id, title from app_info';
-
+  // console.log(getAllAppsQuery);
   dbModule.withConnection(dbModule.pool, function(connection, next){
     connection.query(getAllAppsQuery, function(err, appRows, fields){
       if (err)
@@ -17,12 +18,12 @@ router.get('/', function(req, res, next) {
       }else if(appRows){
         queryCount = 1;
       }else{
-        //이 부분 에러 처리 할지?
         queryCount = 0;
       }
       return next(err, appRows, queryCount);
     });
   }, function(err, message){
+    console.log(err);
     var apps = arguments[1];
     var appCount = arguments[2];
     if(err)
@@ -76,17 +77,25 @@ router.put('/:appId', function(req, res){
   });
 });
 
-router.delete('/:appId', function(req, res){
-  var appId = req.params.appId;
-  var deleteAppQuery = 'delete from app_info where id=?';
+router.delete('/', function(req, res){
+  // var appId = req.params.appId;
+  console.log('req.body: ');
+  console.log(req.body);
+  var apps = req.body.app_list;
+  var deleteAppList = [];
+  var deleteAppQuery = 'delete from app_info where (id) in (?)';
+
+  for(var i=0;i<apps.length;i++){
+    deleteAppList.push(apps[i].id);
+  }
 
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(deleteAppQuery, appId, function(err, appRows, fields){
+    connection.query(deleteAppQuery, [deleteAppList], function(err, appRows, fields){
       if(err){
-        return next(err, 'DELETE app, api/apps/, DB delete, error');
+        return next(err, 'DELETE apps, api/apps/, DB delete, error');
       }
       if(appRows.affectedRows == 0)
-        return next(err, 'DELETE ONE, api/apps/, DB delete, no data');
+        return next(err, 'DELETE apps, api/apps/, DB delete, no data');
       else
         return next(err);
     });
@@ -132,7 +141,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
     ecArr.push(parseInt(req.query.ec[i]));
   }
   var queryCount;
-  var campaignsJoinQuery = 'select cl.campaign_id, cl.campaign_order, ci.title, ci.camp_desc, ci.url, ci.template, ci.ad_expire_day ' +
+  var campaignsJoinQuery = 'select *' +
   'from campaign_for_location as cl inner join location_for_app as la on cl.location_seq=la.seq ' +
   'inner join campaign_info as ci on cl.campaign_id=ci.id ' +
   'where la.app_id=? and la.location_id=?';
@@ -162,6 +171,7 @@ router.get('/:appid/locations/:locationid/campaigns', function(req, res, next){
       }
     });
   }, function(err, message){
+    console.log(err);
     var campaigns = arguments[1];
     var queryCount = arguments[2];
     if(err)
@@ -183,23 +193,6 @@ router.post('/:appid/locations/:locationid/campaigns', function(req, res){
   var enrollCampaignsQuery;
   var identitySql = "select seq from location_for_app where location_id=? and app_id=?";
   var locationSeq;
-  
-  // dbModule.withConnection(dbModule.pool, function(connection, next){
-  //   connection.query(identitySql, [locationId,appId], function(err, camRow, fields){
-  //     if (err){
-  //       return next(err, 'POST campaign of location, DB insert, error');
-  //     }
-  //     return next(err,camRow);
-  //   });
-  // }, function(err, message){
-  //   if(err){
-  //     res.status(400).json({'error':message});
-  //   }else{
-      
-  //   }
-  // });
-
-  
 
   enrollCampaignsQuery = 'insert ignore into campaign_for_location (location_seq, campaign_id, campaign_order)'
   +' values ?';
@@ -236,9 +229,9 @@ router.post('/:appid/locations/:locationid/campaigns', function(req, res){
   });
 });
 
-router.delete('/:appid/locations/:locationid/campaigns', function(req, res){
+router.delete('/:appid/locations/:locationseq/campaigns', function(req, res){
   var appId = parseInt(req.params.appid);
-  var locationSeq = req.params.locationSeq;
+  var locationSeq = req.params.locationseq;
   var campaigns = req.body.campaigns;
   var deleteCampaigns = [];
   var deleteCampaignsQuery;
@@ -259,6 +252,7 @@ router.delete('/:appid/locations/:locationid/campaigns', function(req, res){
         return next(err);
     });
   }, function(err, message){
+    console.log(err);
     if(err || message !== undefined)
       res.status(400).json({'error':message});
     else

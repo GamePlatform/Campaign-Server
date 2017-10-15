@@ -4,7 +4,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a href="#">Home</a>
@@ -42,8 +42,8 @@
             </div>
             <form action="http://localhost:30022/api/campaigns/url" method="post">
                 <div class="form-group">
-                    <label for="person">담당자</label>
-                    <input type="text" class="form-control">
+                    <label for="writer">작성자</label>
+                    <input type="text" class="form-control" id="writer" name="writer">
                 </div>
                 <h3>미리보기(템플릿)</h3>
                 <div class="row" id="template" style="height:260px">
@@ -156,7 +156,7 @@
                 <div>끝날짜 : <input type="text" class="datepicker" name="endDate"></div>
                 <br><br>
                 <!-- <button type="submit" class="btn btn-default">Submit</button>  -->
-                <button type="button" class="btn btn-default" id="submit">Submit</button> 
+                <button type="button" class="btn btn-default" id="submit">Submit</button>
             </form>
         </div>
     </div>

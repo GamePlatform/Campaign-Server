@@ -63,3 +63,12 @@ CREATE TABLE `campaign_for_location` (
   CONSTRAINT `locationID_to_campaign_for_app` FOREIGN KEY (`location_seq`) REFERENCES `location_for_app` (`seq`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `campaign_click` (
+  `device_id` int(11) NOT NULL,
+  `campaign_id` int(11) NOT NULL,
+  `type` enum('exposure', 'click', 'purchase') NOT NULL,
+  `number` int(11) NOT NULL, 
+   PRIMARY KEY (`device_id`, `campaign_id`, `type`),
+  FOREIGN KEY (`device_id`) REFERENCES `device_for_app` (`device_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`campaign_id`) REFERENCES `campaign_for_location` (`campaign_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
