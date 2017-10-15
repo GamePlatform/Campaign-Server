@@ -1,7 +1,7 @@
 var express = require('express');
 var mysql = require('mysql');
 var router = express.Router();
-
+var myIP= require('my-local-ip');
 var dbModule = require('../../config/db.js');
 
 router.get('/', function (req, res, next) {
@@ -137,18 +137,23 @@ router.post('/image', function (req, res, next) {
   var title = req.body.title;
   var uploadImage = req.files.uploadImage;
   var filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
-  var url = req.protocol + '://' + req.get('host') + "/" + filePath;
+  var url = myIP()+":"+req.socket.localPort+"/" + filePath;
   var desc = req.body.desc;
   var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
 
+  console.log("public/"+filePath);
+  console.log(url);
+
   var sql = 'insert into campaign_info ' +
   '(title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?,?)';
+  'values (?,?,?,?,?,?,?)';
   dbModule.inTransaction(dbModule.pool, function(connection, next){
     connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+      console.log(result);
+      console.log(err);
       if (err) {
         return next(err);
         res.status(400).json({
@@ -157,14 +162,23 @@ router.post('/image', function (req, res, next) {
           'result': err
         });
       }
+
         // Use the mv() method to place the file somewhere on your server 
-        uploadImage.mv(filePath, function (err) {
+        uploadImage.mv("public/"+filePath, function (err) {
           if (err) {
             return next(err);
+
+            res.status(400).json({
+              'code': -1,
+              'msg': 'file saved error',
+              'result': err
+            });
           }
         });
+        return next();
       });
   },function(err){
+
     res.status(200).json({
       'code': 0,
       'msg': 'suc'

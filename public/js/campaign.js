@@ -66,6 +66,11 @@ $(document).ready(function () {
         $("input[name=ratio]").val($(this).parents("li").index());
     });
 
+    var urlPath="image";
+    $("input[name=urlType]").click(function (e){
+        urlPath=$(this).val();
+    });
+
     $("#submit").click(function (event) {
         var ratioArr = [
             [0, 0],
@@ -74,7 +79,7 @@ $(document).ready(function () {
         var ratio = ratioArr[$("input[name=ratio]").val()];
         if ((ratio == null) || (typeof ratio == 'undefined')) {
             alert('창 크기를 선택해주세요.');
-            return;
+            return false;
         }
         var param = {
             'template': $("input[name=template]:checked").val(),
@@ -86,23 +91,31 @@ $(document).ready(function () {
             'desc': $("input[name=desc]").val(),
             'expireDay': $("input[name=ad_expire_day]").val(),
             'urlType': $("input[name=urlType]:checked").val(),
+            'uploadImage': $("input[name=uploadImage]")[0].files[0],
             'url': $("input[name=url]").val(),
             'startDate': $("input[name=startDate]").val(),
             'endDate': $("input[name=endDate]").val(),
         };
+
+        var formData = new FormData();
 
         for (var key in param) {
             if ((param[key] == null) ||
                 (typeof param[key] == 'undefined') ||
                 (typeof param[key] == "string" && !param[key].length)) {
                 alert(key + '항목을 입력해주세요.');
-                return;
+                formData.remove();
+                return false;
             }
+            formData.append(key,param[key]);
         }
+    
         $.ajax({
             type: "POST",
-            url: '/api/campaigns/url',
-            data: param,
+            url: '/api/campaigns/'+urlPath,
+            processData: false,
+            contentType: false,
+            data: formData,
             success: function (e) {
                 console.log(e);
                 window.location.reload();
@@ -111,6 +124,7 @@ $(document).ready(function () {
                 alert(JSON.stringify(e));
             }
         });
+        return false;
     });
 });
 

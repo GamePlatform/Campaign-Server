@@ -40,124 +40,122 @@
                     광고를 등록해봅시다! <small>팀 aws</small>
                 </h1>
             </div>
-            <form action="http://localhost:30022/api/campaigns/url" method="post">
-                <div class="form-group">
-                    <label for="writer">작성자</label>
-                    <input type="text" class="form-control" id="writer" name="writer">
+            <div class="form-group">
+                <label for="writer">작성자</label>
+                <input type="text" class="form-control" id="writer" name="writer">
+            </div>
+            <h3>미리보기(템플릿)</h3>
+            <div class="row" id="template" style="height:260px">
+                <div class="col-md-4" id="template1">
+                    <div class="thumbnail">
+                        <div style=float:right>x</div><br>
+                        <img class="templateThumbnail" alt="Bootstrap Thumbnail First" src="http://lorempixel.com/output/people-q-c-600-200-1.jpg">
+                        <div><input id="temp1Check" type="checkbox"><label class="ad_expire_day_title" for="temp1Check">오늘은 그만보기</label></div>
+                    </div>
                 </div>
-                <h3>미리보기(템플릿)</h3>
-                <div class="row" id="template" style="height:260px">
-                    <div class="col-md-4" id="template1">
-                        <div class="thumbnail">
-                            <div style=float:right>x</div><br>
-                            <img class="templateThumbnail" alt="Bootstrap Thumbnail First" src="http://lorempixel.com/output/people-q-c-600-200-1.jpg">
-                            <div><input id="temp1Check" type="checkbox"><label class="ad_expire_day_title" for="temp1Check">오늘은 그만보기</label></div>
-                        </div>
+                <div class="col-md-4" id="template2">
+                    <div class="thumbnail">
+                        <div style=float:right>x</div><br>
+                        <img class="templateThumbnail"  alt="Bootstrap Thumbnail Second" src="http://lorempixel.com/output/city-q-c-600-200-1.jpg">
                     </div>
-                    <div class="col-md-4" id="template2">
-                        <div class="thumbnail">
-                            <div style=float:right>x</div><br>
-                            <img class="templateThumbnail"  alt="Bootstrap Thumbnail Second" src="http://lorempixel.com/output/city-q-c-600-200-1.jpg">
-                        </div>
+                </div>
+                <div class="col-md-4" id="template3">
+                    <div class="thumbnail">
+                        <img class="templateThumbnail"  alt="Bootstrap Thumbnail Third" src="http://lorempixel.com/output/sports-q-c-600-200-1.jpg">
+                        <input id="temp2Check" type="checkbox"><label class="ad_expire_day_title" for="temp2Check">오늘은 그만보기</label>
+                        <div style=float:right>x</div>
                     </div>
-                    <div class="col-md-4" id="template3">
-                        <div class="thumbnail">
-                            <img class="templateThumbnail"  alt="Bootstrap Thumbnail Third" src="http://lorempixel.com/output/sports-q-c-600-200-1.jpg">
-                            <input id="temp2Check" type="checkbox"><label class="ad_expire_day_title" for="temp2Check">오늘은 그만보기</label>
-                            <div style=float:right>x</div>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <input type="radio" name="template" value="1">템플릿1
+                <input type="radio" name="template" value="2">템플릿2
+                <input type="radio" name="template" value="3">템플릿3
+            </div>
+            <br><br><br>
+            <div class="form-group">
+                <label>광고 설명</label>
+                <input type="text" class="form-control" name="desc" placeholder="물약 광고">
+            </div>
+            <div class="form-group">
+                <label>ad_expire_day_title</label>
+                <input type="text" class="form-control" id="ad_expire_day_title" name="title" placeholder="7일 광고 그만 보기">
+            </div>
+            <div class="dropdown">
+                <input name="ad_expire_day" hidden>
+                <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <div class="btn btn-primary" id="ad_expire_day">그만 보기 날짜를 선택해주세요.</div><span class="caret"></span>
+                </div>
+                <ul class="dropdown-menu">
+                    <li><a class="ad_expire_day">0</a></li>
+                    <li><a class="ad_expire_day">1</a></li>
+                    <li><a class="ad_expire_day">2</a></li>
+                    <li><a class="ad_expire_day">3</a></li>
+                    <li><a class="ad_expire_day">4</a></li>
+                    <li><a class="ad_expire_day">5</a></li>
+                    <li><a class="ad_expire_day">6</a></li>
+                    <li><a class="ad_expire_day">7</a></li>
+                </ul>
+            </div>
+            <h3>권역 설정</h3>
+            <div class="btn-group">
+                <button class="btn btn-default" type="button">한국</button>
+                <button class="btn btn-default" type="button">미국</button>
+                <button class="btn btn-default" type="button">중국</button>
+                <button class="btn btn-default" type="button">전체</button>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>노출 선택</label>
                 </div>
                 <div class="col-md-6">
-                    <input type="radio" name="template" value="1">템플릿1
-                    <input type="radio" name="template" value="2">템플릿2
-                    <input type="radio" name="template" value="3">템플릿3
+                    <input type="radio" name="urlType" value="image">이미지
+                    <input type="radio" name="urlType" value="url">url로 등록
                 </div>
-                <br><br><br>
-                <div class="form-group">
-                    <label>광고 설명</label>
-                    <input type="text" class="form-control" name="desc" placeholder="물약 광고">
+            </div>
+            <br>
+            <div id="urlType">
+                <div class="form-group" id="urlTypeimage">
+                    <label for="urlTypeimageInput">File input</label>
+                    <input type="file" id="urlTypeimageInput" name="uploadImage">
                 </div>
-                <div class="form-group">
-                    <label>ad_expire_day_title</label>
-                    <input type="text" class="form-control" id="ad_expire_day_title" name="title" placeholder="7일 광고 그만 보기">
+                <div class="form-group" id="urlTypeurl">
+                    <label for="URL">URL Input</label>
+                    <input type="text" class="form-control" id="urlTypeurlInput" name="url">
                 </div>
-                <div class="dropdown">
-                    <input name="ad_expire_day" hidden>
-                    <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <div class="btn btn-primary" id="ad_expire_day">그만 보기 날짜를 선택해주세요.</div><span class="caret"></span>
-                    </div>
-                    <ul class="dropdown-menu">
-                        <li><a class="ad_expire_day">0</a></li>
-                        <li><a class="ad_expire_day">1</a></li>
-                        <li><a class="ad_expire_day">2</a></li>
-                        <li><a class="ad_expire_day">3</a></li>
-                        <li><a class="ad_expire_day">4</a></li>
-                        <li><a class="ad_expire_day">5</a></li>
-                        <li><a class="ad_expire_day">6</a></li>
-                        <li><a class="ad_expire_day">7</a></li>
-                    </ul>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label>선택시 이동경로</label>
                 </div>
-                <h3>권역 설정</h3>
-                <div class="btn-group">
-                    <button class="btn btn-default" type="button">한국</button>
-                    <button class="btn btn-default" type="button">미국</button>
-                    <button class="btn btn-default" type="button">중국</button>
-                    <button class="btn btn-default" type="button">전체</button>
+                <div class="col-md-6">
+                    <input type="radio" name="locationType" value=0>게임 내 이동
+                    <input type="radio" name="locationType" value=1>url
                 </div>
-                <br><br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>노출 선택</label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" name="urlType" value="image">이미지
-                        <input type="radio" name="urlType" value="url">url로 등록
-                    </div>
+            </div>
+            <br>
+            <div class="form-group" id="redirect_location_div">
+                <label for="redirect_location">redirect_location</label>
+                <input type="text" class="form-control" id="redirect_location" name="redirect_location" placeholder="물약 상점">
+            </div>
+            <div class="dropdown">
+                <input name="ratio" hidden>
+                <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <div class="btn btn-primary" id="ratio">창크기를 선택해주세요.</div><span class="caret"></span>
                 </div>
-                <br>
-                <div id="urlType">
-                    <div class="form-group" id="urlTypeimage">
-                        <label for="urlTypeimageInput">File input</label>
-                        <input type="file" id="urlTypeimageInput" accept="image/*">
-                    </div>
-                    <div class="form-group" id="urlTypeurl">
-                        <label for="URL">URL Input</label>
-                        <input type="text" class="form-control" id="urlTypeurlInput" name="url">
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>선택시 이동경로</label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" name="locationType" value=0>게임 내 이동
-                        <input type="radio" name="locationType" value=1>url
-                    </div>
-                </div>
-                <br>
-                <div class="form-group" id="redirect_location_div">
-                    <label for="redirect_location">redirect_location</label>
-                    <input type="text" class="form-control" id="redirect_location" name="redirect_location" placeholder="물약 상점">
-                </div>
-                <div class="dropdown">
-                    <input name="ratio" hidden>
-                    <div class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <div class="btn btn-primary" id="ratio">창크기를 선택해주세요.</div><span class="caret"></span>
-                    </div>
-                    <ul class="dropdown-menu">
-                        <li><a class="ratio">전체화면</a></li>
-                        <li><a class="ratio">500x500</a></li>
-                    </ul>
-                </div>
-                <br>
-                <div>시작날짜 : <input type="text" class="datepicker" name="startDate"></div>
-                <div>끝날짜 : <input type="text" class="datepicker" name="endDate"></div>
-                <br><br>
-                <!-- <button type="submit" class="btn btn-default">Submit</button>  -->
-                <button type="button" class="btn btn-default" id="submit">Submit</button>
-            </form>
+                <ul class="dropdown-menu">
+                    <li><a class="ratio">전체화면</a></li>
+                    <li><a class="ratio">500x500</a></li>
+                </ul>
+            </div>
+            <br>
+            <div>시작날짜 : <input type="text" class="datepicker" name="startDate"></div>
+            <div>끝날짜 : <input type="text" class="datepicker" name="endDate"></div>
+            <br><br>
+            <!-- <button type="submit" class="btn btn-default">Submit</button>  -->
+            <button type="button" class="btn btn-default" id="submit">Submit</button>
         </div>
     </div>
 </div>

@@ -41,7 +41,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'upload_images')));
 app.use(fileUpload());
 
 app.use('/', index);
@@ -78,7 +77,7 @@ app.use(errorUtils.errorHandler);
   });
 */
 
-fs.mkdir("upload_images",function(e){
+fs.mkdir("public/upload_images",function(e){
     if(!e || (e && e.code === 'EEXIST')){
         //do something with contents
     } else {
