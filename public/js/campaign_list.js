@@ -8,7 +8,7 @@ $(document).ready(function() {
 
   $.ajax({
     type: "GET",
-    url:"http://211.253.28.194:30022/api/campaigns",
+    url:"/api/campaigns",
     success: function(data){
       var result=data.result;
       var campaigns = result.campaigns;

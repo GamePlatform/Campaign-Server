@@ -82,6 +82,7 @@ $(document).ready(function () {
             return false;
         }
         var param = {
+            'writer': $("input[name=writer]").val(), 
             'template': $("input[name=template]:checked").val(),
             'ratio_x': ratio[0],
             'ratio_y': ratio[1],
