@@ -1,15 +1,11 @@
 
-.highlight a{
-	background-color: #cccccc;
+.highlight{
 	padding: auto;
 	margin: .5em 0 .5em 4em;
 
 }
 .highlight a:hover{
 	background-color: #cccccc;
-}
-.hidden {
-    display: none;
 }
 #modal-campaign-list, #sel-modal-campaign-list {
     border: 1px solid #eee;

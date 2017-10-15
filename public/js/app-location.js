@@ -65,7 +65,7 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/api/apps',
 			contentType: "application/json",
-			data: JSON.stringify({"app_list": delAppsIdList}),
+			data: JSON.stringify({"app_list": delAppIdList}),
 			method: "DELETE",
 			success: function (result) {
 				appList.empty();
@@ -82,22 +82,35 @@ $(document).ready(function(){
 	});
 
 	var appId;
-	var highlightApp
+	var highlightAddApp
 	appList.on("click","a",function(e){
-		if(highlightApp!=null){
-			highlightApp.removeClass('highlight');
-		}
 		var divParent=$(this).closest('li');
-		highlightApp=divParent.addClass('highlight');
+		if(highlightAddApp != null && highlightAddApp.hasClass('highlight')){
+			highlightAddApp.removeClass('highlight');
+		}
+
+		highlightAddApp = divParent.addClass('highlight');	
+		
 
 		appId = $(this).attr("name");
 		locationList.empty();
 		campaignList.empty();
 		getLocationList(appId);
+		return false;
 	});
+
 	var delAppIdList = [];
+
 	appListDelModal.on("click","a",function(e){
-		delAppIdList.push({"id": $(this).attr("name")});
+		var divParent=$(this).closest('li');
+		if(divParent.hasClass('highlight')){
+			divParent.removeClass('highlight');
+			delAppIdList.splice(delAppIdList.indexOf($(this).attr("name")),1);
+		}else{
+			divParent.addClass('highlight');
+			delAppIdList.push({"id": $(this).attr("name")});	
+		}
+		// console.log(delAppIdList);
 	});
 
 	locationDelBtn.on('click',function(e){
@@ -130,7 +143,6 @@ $(document).ready(function(){
 		locationDesc.val('');
 	});
 
-	var delLocationIdList = [];
 	locationDelModal.on("click","input[name='ok']",function(e){
 		$.ajax({
 			url: '/api/apps/'+appId+'/locations',
@@ -160,11 +172,12 @@ $(document).ready(function(){
 	var highlightLocation = null;
 
 	locationList.on("click","a",function(e){
-		var divParent=$(this).closest('div');
-		if(highlightLocation != null){
-			divParent.removeClass('highlight');
+		var divParent=$(this).closest('li');
+		if(highlightLocation != null && highlightLocation.hasClass('highlight')){
+			highlightLocation.removeClass('highlight');
 		}
-		highlightLocation=divParent.addClass('highlight');
+		
+		highlightLocation = divParent.addClass('highlight');	
 
 		locationSelectIdValue = $(this).text();
 		locationSeq = $(this).attr("name");
@@ -174,7 +187,14 @@ $(document).ready(function(){
 
 	var delLocationIdList = [];
 	locationListDelModal.on("click","a",function(e){
-		delLocationIdList.push({"seq": $(this).attr("name")});
+		var divParent=$(this).closest('li');
+		if(divParent.hasClass('highlight')){
+			divParent.removeClass('highlight');
+			delLocationIdList.splice(delLocationIdList.indexOf($(this).attr("name")),1);
+		}else{
+			divParent.addClass('highlight');
+			delLocationIdList.push({"seq": $(this).attr("name")});;	
+		}
 	});
 
 
@@ -214,6 +234,12 @@ $(document).ready(function(){
 	});
 
 
+	var cancelBtn = $('input[name="cancel"]');
+	cancelBtn.on('click',function(e){
+		delAppIdList = [];
+		delLocationIdList =[];
+	});
+
 	function getAppList(checkDelModal){
 		$.ajax({
 			type: "GET",
@@ -247,14 +273,12 @@ $(document).ready(function(){
 				var campaignsData = result.result.campaigns;
 				var existCamp = "";
 				var idx ="";
-				var camp_order = "";
 				for(var i = 0; i < count; i++){
 					if(i < campaignIds.length){
 						idx = campaignIds.map(function(d){ return d.campaign_id; }).indexOf(campaignsData[i].id);
 					}else{
 						idx = -1;
 					}
-					camp_order = "";
 					if(idx != -1){
 						selModalCampaignList.append("<li><a name='"+campaignsData[i].id+"'>"
 							+campaignsData[i].camp_desc+"</a></li>");
@@ -306,15 +330,9 @@ $(document).ready(function(){
 				});
 
 				campaignIds = [];
-				if(checkDelModal === undefined){
-					for(var i=0, length = campaignDatas.length;i<length;i++){
-						campaignList.append("<li><a>"+campaignDatas[i].camp_desc+"</a></li>");
-						campaignIds.push({"campaign_id":campaignDatas[i].campaign_id,"campaign_order":campaignDatas[i].campaign_order});
-					}
-				}else if(checkDelModal === 'delModal'){
-					for(var i=0, length = campaignDatas.length;i<length;i++){
-						campaignListDelModal.append("<li><a name="+campaignDatas[i].campaign_id+">"+campaignDatas[i].camp_desc+"</a></li>");
-					}
+				for(var i=0, length = campaignDatas.length;i<length;i++){
+					campaignList.append("<li><a>"+campaignDatas[i].camp_desc+"</a></li>");
+					campaignIds.push({"campaign_id":campaignDatas[i].campaign_id,"campaign_order":campaignDatas[i].campaign_order});
 				}
 			},
 			error: function (e) {
