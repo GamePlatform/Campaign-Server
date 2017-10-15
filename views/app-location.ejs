@@ -38,7 +38,6 @@
 				<div id="campaigns">
 					<div align="right">
 						<button id="campaign-add-btn" type="button" class="btn btn-info" data-toggle="modal" data-target="#campaign_modal">add</button>
-						<button id="campaign-del-btn" type="button" class="btn" style="background-color:#ff6e6e;color:#fff; border-color:#ee6e6e" data-toggle="modal" data-target="#location_del_modal" >delete</button>
 					</div>
 					<div class="rectangle-list">
 						<ol id="campaign-list">
@@ -61,7 +60,7 @@
 					<span>App Title</span> :<input id="app-title" type="text">
 				</div>
 				<div class="modal-footer">
-					<input name="ok" class="btn btn-default" value="등록">
+					<input name="ok" class="btn btn-default" data-dismiss="modal" value="등록">
 					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 				</div>
 			</form>
@@ -79,13 +78,13 @@
 					</div>
 					<div class="modal-body">
 						<div>App List</div>
-						<div>
-							<ol id="del-modal-app-list" class="rounded-list">
+						<div class="rectangle-list">
+							<ol id="del-modal-app-list">
 							</ol>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input name="ok" class="btn btn-default" value="삭제">
+						<input name="ok" class="btn btn-default" data-dismiss="modal" value="삭제">
 						<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 					</div>
 				</div>
@@ -110,7 +109,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input name="ok" class="btn btn-default" value="등록">
+					<input name="ok" class="btn btn-default" data-dismiss="modal" value="등록">
 					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 				</div>
 			</form>
@@ -128,13 +127,13 @@
 					</div>
 					<div class="modal-body">
 						<div>Location List</div>
-						<div>
-							<ol id="del-modal-location-list" class="rounded-list">
+						<div class="rectangle-list">
+							<ol id="del-modal-location-list" >
 						</ol>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input name="ok" class="btn btn-default" value="삭제">
+						<input name="ok" class="btn btn-default" data-dismiss="modal" value="삭제">
 						<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 					</div>
 				</div>
@@ -151,7 +150,7 @@
 					<h4 class="modal-title">Campaign Connection Form</h4>
 				</div>
 				<div class="modal-body">
-					<input name="ok" class="btn btn-default" value="등록">
+					<input name="ok" class="btn btn-default" data-dismiss="modal" value="등록">
 					<input name="cancel" type="reset" data-dismiss="modal" value="취소">
 				</div>
 				<div class="modal-footer">
@@ -162,28 +161,6 @@
 					<div class="rows rectangle-list" style="float:right; position:block;">
 						<ol id="sel-modal-campaign-list" class="connectedSortable">
 						</ol>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-<div id="campaign_del_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
-			<form>
-				<div class="container-fluid">
-					<div>
-						Delete Campaigns
-					</div>
-					<div class="rows">
-						<ol id="del-modal-campaign-list" class="rounded-list">
-						</ol>
-					</div>
-					<div>
-						<input name="ok" class="btn btn-default" value="확인">
-						<input name="cancel" type="reset" value="취소">
 					</div>
 				</div>
 			</form>

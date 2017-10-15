@@ -70,8 +70,6 @@ $(document).ready(function(){
 			success: function (result) {
 				appList.empty();
 				appListDelModal.empty();
-				appDelModal.hide();
-				appDelModal.addClass("hidden");
 				locationList.empty();
 				campaignList.empty();
 				getAppList();
@@ -101,22 +99,6 @@ $(document).ready(function(){
 	appListDelModal.on("click","a",function(e){
 		delAppIdList.push({"id": $(this).attr("name")});
 	});
-
-	// $("input[name='cancel']").on("click",function(e){
-	// 	appModal.hide();
-	// 	appDelModal.hide();
-	// 	locationModal.hide();
-	// 	locationDelModal.hide();
-	// 	campaignModal.hide();
-	// 	campaignDelModal.hide();
-
-	// 	appModal.addClass("hidden");
-	// 	appDelModal.addClass("hidden");
-	// 	locationModal.addClass("hidden");
-	// 	locationDelModal.addClass("hidden");
-	// 	campaignModal.addClass("hidden");
-	// 	campaignDelModal.addClass("hidden");
-	// });
 
 	locationDelBtn.on('click',function(e){
 		locationListDelModal.empty();
@@ -160,8 +142,6 @@ $(document).ready(function(){
 			success: function (result) {
 				locationList.empty();
 				locationListDelModal.empty();
-				locationDelModal.hide();
-				locationDelModal.addClass("hidden");
 				campaignList.empty();
 				getLocationList(appId);
 			},
@@ -200,21 +180,10 @@ $(document).ready(function(){
 
 	campaignAddBtn.on('click',function(e){
 		modalCampaignList.empty();
+		selModalCampaignList.empty();
 		getCampaignList();
 	});
-	campaignDelBtn.on('click',function(e){
-		campaignListDelModal.empty();
-		getCampaignListForLocation(appId, locationSelectIdValue, checkDelModal);
-	});
 
-	
-
-	var delCampaignIdList = [];
-	campaignDelModal.on("click","a",function(e){
-		var selectCampaign = $(this);
-		var campaignId = parseInt(selectCampaign.attr('name'));
-		delCampaignIdList.push({"campaign_id": campaignId});
-	});
 
 	campaignModal.on("click","input[name='ok']",function(e){
 		var selCampaigns = []
@@ -241,33 +210,9 @@ $(document).ready(function(){
 			}
 		});
 		modalCampaignList.empty();
-		campaignModal.hide();
-		campaignModal.addClass("hidden");
-		
+		selModalCampaignList.empty();
 	});
 
-	campaignDelModal.on("click","input[name='ok']",function(e){
-		$.ajax({
-			url: '/api/apps/'+appId+'/locations/'
-			+locationSeq+'/campaigns',
-			contentType: "application/json",
-			data: JSON.stringify({"campaigns":delCampaignIdList}),
-			method: "DELETE",
-			success: function (result) {
-				campaignList.empty();
-				campaignListDelModal.empty();
-				campaignDelModal.hide();
-				campaignDelModal.addClass("hidden");
-				getCampaignListForLocation(appId,locationSelectIdValue);
-			},
-			error: function (e) {
-				console.log(JSON.stringify(e));
-			}
-		});
-		modalCampaignList.empty();
-		campaignModal.hide();
-		campaignModal.addClass("hidden");
-	});
 
 	function getAppList(checkDelModal){
 		$.ajax({
