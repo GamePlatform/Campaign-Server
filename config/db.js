@@ -2,9 +2,9 @@ var mysql = require('mysql');
 
 var pool = mysql.createPool({
     connectionLimit : 10,
-    host     : 'localhost',
+    host     : '211.253.28.194',
     user     : 'root',
-    password : '',
+    password : 'camp7531#$',
     database : 'campaigndb',
     waitForConnections : false
 });

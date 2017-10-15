@@ -10,6 +10,7 @@
   <link href="/stylesheets/camplist_subpage.css" rel="stylesheet">
   <link href="/stylesheets/template_header.css" rel="stylesheet">
   <link href="/stylesheets/template_list.css" rel="stylesheet">
+  <link href="/stylesheets/template_sidebar.css" rel="stylesheet">
   <script src="/js/jquery.min.js"></script>
 
 </head>
@@ -19,13 +20,21 @@
   </header>
   <main>
     <%- include('../'+viewPage,data) %>
-  </main>
-  <footer>
-    <%- include('../include/footer.ejs') %>
-  </footer>
+    <div class="w3-sidebar w3-bar-block" style="width:25%">
+  <a href="#" class="w3-bar-item w3-button">Link 1</a>
+  <a href="#" class="w3-bar-item w3-button">Link 2</a>
+  <a href="#" class="w3-bar-item w3-button">Link 3</a>
+</div>
 
-  <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-  <script src="/js/bootstrap.min.js"></script>
-  <script src="/js/bootstrap-datetimepicker.min.js"></script>
-</body>
-</html>
+<div style="margin-left:25%">
+</div>
+  </main>
+    <footer>
+      <%- include('../include/footer.ejs') %>
+    </footer>
+
+    <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-datetimepicker.min.js"></script>
+  </body>
+  </html>

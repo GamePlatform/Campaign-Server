@@ -1,0 +1,5 @@
+.content{width:660px; height:300px; float:left;}
+
+.sidebar{width:300px; height:400px; float:left;}
+
+.container {background:#08298A url(bg.gif) repeat-y top left; width:960px;}
