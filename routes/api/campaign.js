@@ -159,7 +159,7 @@ router.post('/image', function (req, res, next) {
   'values (?,POINT(?,?),?,?,?,?,?,?,?,?,?)';
 
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [writer, ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [writer, ratio_x, ratio_y, is_url, redirect_location, title, desc, url, template, expireDay, startDate, endDate], function (err, result) {
       console.log(result);
       console.log(err);
       if (err) {
