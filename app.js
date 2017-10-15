@@ -13,7 +13,7 @@ var campaign = require('./routes/api/campaign');
 var appsApi = require('./routes/api/apps');
 var locationsApi = require('./routes/api/locations');
 var devicesApi = require('./routes/api/devices');
-var clickApi = require('./routes/api/click');
+//var clickApi = require('./routes/api/click');
 var errorUtils = require('./error');
 
 // test js
@@ -41,12 +41,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'upload_images')));
 app.use(fileUpload());
 
 app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/api/campaigns', campaign);
-app.use('/api/campaigns', clickApi);
+//app.use('/api/campaigns', clickApi);
 app.use('/api/apps', appsApi);
 app.use('/api/apps', locationsApi);
 app.use('/api/apps', devicesApi);

@@ -1,6 +1,6 @@
 .rectangle-list{
-  width:500px;
-  margin: auto;
+    width: auto;
+    margin: auto;
 }
 .rectangle-list ol {
     counter-reset: li; /* Initiate a counter */

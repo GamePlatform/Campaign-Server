@@ -125,20 +125,24 @@
 	</div>
 </div>
 <div id="campaign_modal" class="hidden">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width:400px">
 			<form>
 				<div class="container-fluid">
 					<div>
 						Campaign List
 					</div>
-					<div class="rows rectangle-list">
-						<ol id="modal-campaign-list">
-						</ol>
-					</div>
-					<div>
+					<div class="row">
 						<input name="ok" class="btn btn-default" value="등록">
 						<input name="cancel" type="reset" value="취소">
+					</div>
+					<div class="rows rectangle-list" style="float:left; position:block;">
+						<ol id="modal-campaign-list" class="connectedSortable" >
+						</ol>
+					</div>
+					<div class="rows rectangle-list" style="float:right; position:block;">
+						<ol id="sel-modal-campaign-list" class="connectedSortable">
+						</ol>
 					</div>
 				</div>
 			</form>

@@ -30,7 +30,9 @@ $(document).ready(function(){
 	var campaignListDelModal = $('#del-modal-campaign-list');
 
 	var modalCampaignList = $('#modal-campaign-list');
+	var selModalCampaignList = $('#sel-modal-campaign-list');
 
+	var campaignIds = [];
 	// var campaignTitle = $('#campaign-title');
 	var checkDelModal = 'delModal';
 
@@ -101,10 +103,10 @@ $(document).ready(function(){
 	var appId;
 	var highlightApp
 	appList.on("click","a",function(e){
-		var divParent=$(this).closest('div');
 		if(highlightApp!=null){
 			highlightApp.removeClass('highlight');
 		}
+		var divParent=$(this).closest('li');
 		highlightApp=divParent.addClass('highlight');
 
 		appId = $(this).attr("name");
@@ -207,8 +209,8 @@ $(document).ready(function(){
 	var locationSelectIdValue;
 
 	var locationSeq;
-  
-  	var highlightLocation = null;
+
+	var highlightLocation = null;
 
 	locationList.on("click","a",function(e){
 		var divParent=$(this).closest('div');
@@ -252,29 +254,7 @@ $(document).ready(function(){
 		}
 	});
 
-	var campaignIds = []
-	campaignModal.on("click","a",function(e){
-		var divParent=$(this).closest('div');
-		if(divParent.hasClass('highlight')){
-			divParent.removeClass('highlight');
-		}else{
-			divParent.addClass('highlight');
-		}
-		var selectCampaign = $(this);
-		var campaignId = parseInt(selectCampaign.attr('name'));
-		var campaignOrderInput = selectCampaign.siblings('input[name="order"]').eq(0);
-
-		var campaignOrder = campaignOrderInput.val();
-		if(selectCampaign.hasClass('selectedCampaign')){
-			var index = campaignIds.map(function(d){ return d.campaign_id; }).indexOf(campaignId);
-			selectCampaign.removeClass('selectedCampaign');
-			campaignIds.splice(index,1);
-			campaignOrderInput.val('');
-		}else{
-			selectCampaign.addClass('selectedCampaign');
-			campaignIds.push({"campaign_id":campaignId,"campaign_order":parseInt(campaignOrder)});
-		}
-	});
+	
 
 	var delCampaignIdList = [];
 	campaignDelModal.on("click","a",function(e){
@@ -284,11 +264,20 @@ $(document).ready(function(){
 	});
 
 	campaignModal.on("click","input[name='ok']",function(e){
+		var selCampaigns = []
+		var selLi= selModalCampaignList.children();
+		var length =selLi.length;
+		//console.log(length);
+		for(var i=0;i<length;i++){
+			selCampaigns.push({"campaign_id":selLi.eq(i).children().attr("name"),"campaign_order":i+1});
+		}
+		//console.log(selCampaigns);
+		
 		$.ajax({
 			url: '/api/apps/'+appId+'/locations/'
-				+locationSelectIdValue+'/campaigns',
+			+locationSelectIdValue+'/campaigns',
 			contentType: "application/json",
-			data: JSON.stringify({"campaigns":campaignIds}),
+			data: JSON.stringify({"campaigns":selCampaigns}),
 			method: "post",
 			success: function (result) {
 				campaignList.empty();
@@ -301,12 +290,13 @@ $(document).ready(function(){
 		modalCampaignList.empty();
 		campaignModal.hide();
 		campaignModal.addClass("hidden");
+		
 	});
 
 	campaignDelModal.on("click","input[name='ok']",function(e){
 		$.ajax({
 			url: '/api/apps/'+appId+'/locations/'
-				+locationSeq+'/campaigns',
+			+locationSeq+'/campaigns',
 			contentType: "application/json",
 			data: JSON.stringify({"campaigns":delCampaignIdList}),
 			method: "DELETE",
@@ -361,7 +351,6 @@ $(document).ready(function(){
 				var idx ="";
 				var camp_order = "";
 				for(var i = 0; i < count; i++){
-					existCamp = "";
 					if(i < campaignIds.length){
 						idx = campaignIds.map(function(d){ return d.campaign_id; }).indexOf(campaignsData[i].id);
 					}else{
@@ -369,12 +358,13 @@ $(document).ready(function(){
 					}
 					camp_order = "";
 					if(idx != -1){
-						existCamp = "class='highlight'";
-						camp_order = campaignIds[idx].campaign_order;
+						selModalCampaignList.append("<li><a name='"+campaignsData[i].id+"'>"
+							+campaignsData[i].camp_desc+"</a></li>");
+					}else{
+						modalCampaignList.append("<li><a name='"+campaignsData[i].id+"'>"
+							+campaignsData[i].camp_desc+"</a></li>");
 					}
-					modalCampaignList.append("<li><div "+existCamp+"><a name='"+campaignsData[i].id+"'>"
-						+campaignsData[i].camp_desc+"</a>"
-						+"<input type='text' name='order' value='"+camp_order+"'></div></li>");
+					//+"<input type='text' name='order' value='"+camp_order+"'></div>
 				}
 			},
 			error: function (e) {
@@ -435,4 +425,12 @@ $(document).ready(function(){
 
 		});
 	}
+
+	$( function() {
+		$( "#modal-campaign-list, #sel-modal-campaign-list" ).sortable({
+			connectWith: ".connectedSortable"
+		}).disableSelection();
+	} );
 });
+
+
