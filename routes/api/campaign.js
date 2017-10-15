@@ -137,21 +137,29 @@ router.post('/image', function (req, res, next) {
   var title = req.body.title;
   var uploadImage = req.files.uploadImage;
   var filePath = "upload_images/" + Date.now() + '-' + uploadImage.name;
-  var url = myIP()+":"+req.socket.localPort+"/" + filePath;
+  var url = "http://211.253.28.194:"+req.socket.localPort+"/" + filePath;
+  // 도메인 주소로 변경해야하는 부분
+  //var url = myIP()+":"+req.socket.localPort+"/" + filePath;
   var desc = req.body.desc;
   var template = req.body.template;
   var expireDay = req.body.expireDay;
   var startDate = req.body.startDate;
   var endDate = req.body.endDate;
+  var ratio_x = req.body.ratio_x;
+  var ratio_y = req.body.ratio_y;
+  var is_url = req.body.is_url;
+  var redirect_location = req.body.redirect_location;
+  var writer = req.body.writer;
 
   console.log("public/"+filePath);
   console.log(url);
 
   var sql = 'insert into campaign_info ' +
-  '(title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
-  'values (?,?,?,?,?,?,?)';
+  '(writer,ratio,is_url,redirect_location,title,camp_desc,url,template,ad_expire_day,start_date,end_date)' +
+  'values (?,POINT(?,?),?,?,?,?,?,?,?,?,?)';
+  
   dbModule.inTransaction(dbModule.pool, function(connection, next){
-    connection.query(sql, [title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
+    connection.query(sql, [writer, ratio_x, ratio_y, is_url, redirect_location, title, url, desc, template, expireDay, startDate, endDate], function (err, result) {
       console.log(result);
       console.log(err);
       if (err) {
